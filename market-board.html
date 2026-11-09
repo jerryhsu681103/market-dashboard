@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>投資情報小助手｜即時市場看板</title>
+<style>
+:root{
+  --bg:#f3f4f8;--card:#fff;--ink:#1f2330;--muted:#7a8094;--line:#e6e8ef;
+  --up:#d6293b;--down:#14995a;--brand:#4b3fd6;
+  --c1:#d68a0b;--c2:#e0393e;--c3:#8b3fe0;--c4:#4a5468;--c5:#c2183f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;font-size:14px}
+a{color:inherit;text-decoration:none}
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 18px 6px}
+header h1{font-size:22px;margin:0;font-weight:700}
+#clock{color:var(--muted);font-size:13px}
+.tabs{display:flex;background:#e9eaf1;border-radius:10px;padding:3px}
+.tabs button{border:0;background:none;padding:7px 14px;border-radius:8px;font-size:14px;cursor:pointer;color:#444}
+.tabs button.on{background:#fff;box-shadow:0 1px 3px #0001;font-weight:600;color:#111}
+.hbtns{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.hbtns button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:13px}
+.hbtns button.pri{background:var(--brand);color:#fff;border-color:var(--brand)}
+.oneline{margin:6px 18px 10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 14px;display:flex;gap:10px;align-items:center;overflow:hidden}
+.oneline b{color:var(--brand);white-space:nowrap}
+.oneline .mq{white-space:nowrap;overflow:hidden;flex:1}
+.oneline .mq span{display:inline-block;padding-left:100%;animation:mq 60s linear infinite}
+@keyframes mq{to{transform:translateX(-100%)}}
+.oneline small{color:var(--muted);white-space:nowrap}
+.tape{margin:0 18px 10px;border-radius:10px;overflow:hidden;background:#fff;height:46px}
+.alerts{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 18px 12px}
+.al{border-radius:10px;padding:10px 14px;color:#fff;min-height:66px;display:block;transition:transform .15s}
+.al:hover{transform:translateY(-2px)}
+.al .t{font-size:12px;opacity:.85;margin-bottom:3px}
+.al .h{font-weight:700;font-size:14.5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.al .s{font-size:11.5px;opacity:.85;margin-top:3px}
+.grid{display:grid;grid-template-columns:1fr 1.05fr 1.3fr;gap:12px;margin:0 18px 18px}
+.card{background:var(--card);border-radius:12px;padding:12px 14px;border:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+.card h2{font-size:15.5px;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+.card h2 small{margin-left:auto;font-weight:400;color:var(--muted);font-size:12px}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.tv{width:100%;flex:1}
+.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mini>div{height:150px;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.ai-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.ai-tiles>div{height:72px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.news{list-style:none;margin:0;padding:0}
+.news li{padding:8px 0;border-bottom:1px dashed var(--line);display:flex;gap:8px;align-items:flex-start}
+.news li:last-child{border-bottom:0}
+.news .tag{font-size:11px;color:#fff;border-radius:4px;padding:2px 6px;white-space:nowrap;margin-top:1px}
+.news .dots{color:#d6293b;letter-spacing:-2px;white-space:nowrap;font-size:11px;margin-top:3px}
+.news .tx{flex:1;min-width:0}
+.news .tx a{font-weight:600;line-height:1.4;display:block}
+.news .tx a:hover{color:var(--brand)}
+.news .meta{color:var(--muted);font-size:11.5px;margin-top:2px}
+.subtabs{display:flex;gap:6px;margin-bottom:8px}
+.subtabs button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer}
+.subtabs button.on{background:#eef0ff;border-color:#c9c5ff;color:var(--brand);font-weight:600}
+.loading{color:var(--muted);font-size:13px;padding:10px 0}
+.view{display:none}.view.on{display:block}
+.srcbar{margin:0 18px 22px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;color:var(--muted);font-size:12.5px}
+.srcbar a{background:#fff;border:1px solid var(--line);border-radius:20px;padding:5px 12px;color:var(--ink)}
+.srcbar a:hover{border-color:var(--brand);color:var(--brand)}
+.modal{position:fixed;inset:0;background:#0006;display:none;align-items:center;justify-content:center;z-index:50}
+.modal.on{display:flex}
+.modal .box{background:#fff;border-radius:14px;padding:18px 20px;width:min(560px,92vw);max-height:86vh;overflow:auto}
+.modal h3{margin:0 0 10px}
+.modal label{display:block;font-size:12.5px;color:var(--muted);margin:10px 0 4px}
+.modal textarea,.modal input,.modal select{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px;font:13px ui-monospace,Menlo,monospace}
+.modal .row{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+.modal .row button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 14px;cursor:pointer}
+.modal .row button.pri{background:var(--brand);color:#fff;border-color:var(--brand)}
+.srclist a{display:block;padding:8px 0;border-bottom:1px solid var(--line)}
+.srclist a span{color:var(--muted);font-size:12px;margin-left:6px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 18px 18px}
+@media (max-width:1200px){.grid{grid-template-columns:1fr 1fr}.grid>.col:last-child{grid-column:1/-1}.alerts{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:760px){.grid,.two{grid-template-columns:1fr}.alerts{grid-template-columns:1fr 1fr}.mini{grid-template-columns:repeat(2,1fr)}.ai-tiles{grid-template-columns:repeat(2,1fr)}header h1{font-size:19px}.hbtns{margin-left:0}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>投資情報小助手</h1>
+  <span id="clock"></span>
+  <div class="tabs" id="tabs">
+    <button data-v="brief">今日早報</button>
+    <button data-v="world" class="on">今天的世界</button>
+    <button data-v="assets">我的資產</button>
+  </div>
+  <div class="hbtns">
+    <button class="pri" id="btnRefresh">重新抓取</button>
+    <button id="btnSrc">資料來源</button>
+    <button id="btnSet">⚙ 設定</button>
+  </div>
+</header>
+
+<div class="oneline"><b>頭條一句話：</b><div class="mq"><span id="oneline">載入今日財經頭條中…</span></div><small id="upd">—</small></div>
+<div class="tape" id="tape"></div>
+
+<!-- ============ 今天的世界 ============ -->
+<section class="view on" id="v-world">
+  <div class="alerts" id="alerts"></div>
+
+  <div class="grid">
+    <div class="col">
+      <div class="card" style="height:430px"><h2>台股加權指數 <small>TradingView・一年走勢</small></h2><div class="tv" id="tv-taiex"></div></div>
+      <div class="card" style="height:560px">
+        <h2>美國 AI 股 <small>費城半導體 vs 個股</small></h2>
+        <div class="tv" id="tv-ai" style="flex:0 0 260px"></div>
+        <div class="ai-tiles" id="ai-tiles"></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card"><h2>全球主要股市 <small>近一月走勢・即時</small></h2><div class="mini" id="mini"></div></div>
+      <div class="card" style="flex:1">
+        <h2>AI 世界動態 <small>過去 24 小時重點</small></h2>
+        <ul class="news" id="n-ai"><li class="loading">載入中…</li></ul>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="card" style="height:430px"><h2>全球即時頭條 <small>TradingView Top Stories</small></h2><div class="tv" id="tv-timeline"></div></div>
+      <div class="card"><h2>局勢一句話 <small>依嚴重程度排序</small></h2><ul class="news" id="n-geo"><li class="loading">載入中…</li></ul></div>
+      <div class="card">
+        <h2>財經重點 <small>本週注意</small></h2>
+        <div class="subtabs" id="fin-tabs"><button class="on" data-t="news">頭條新聞</button><button data-t="cal">重要經濟數據</button></div>
+        <ul class="news" id="n-fin"><li class="loading">載入中…</li></ul>
+        <div id="tv-cal" style="height:420px;display:none"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 今日早報 ============ -->
+<section class="view" id="v-brief">
+  <div class="two">
+    <div class="card"><h2>台股盤前重點 <small>Google 新聞・台股</small></h2><ul class="news" id="n-tw"><li class="loading">載入中…</li></ul></div>
+    <div class="card"><h2>美股收盤重點 <small>Google 新聞・美股</small></h2><ul class="news" id="n-us"><li class="loading">載入中…</li></ul></div>
+    <div class="card" style="height:520px"><h2>全球市場總覽 <small>TradingView</small></h2><div class="tv" id="tv-overview"></div></div>
+    <div class="card" style="height:520px"><h2>今日經濟日曆 <small>僅高重要性</small></h2><div class="tv" id="tv-cal2"></div></div>
+    <div class="card" style="height:520px;grid-column:1/-1"><h2>美股熱力圖 <small>S&amp;P 500・依市值</small></h2><div class="tv" id="tv-heat"></div></div>
+  </div>
+</section>
+
+<!-- ============ 我的資產 ============ -->
+<section class="view" id="v-assets">
+  <div class="two">
+    <div class="card" style="height:600px"><h2>我的觀察清單 <small>可在「設定」編輯</small></h2><div class="tv" id="tv-watch"></div></div>
+    <div class="card" style="height:600px"><h2>個股技術圖 <small>點左側清單切換</small></h2><div class="tv" id="tv-adv"></div></div>
+  </div>
+</section>
+
+<div class="srcbar">資料來源：
+  <a href="https://www.futunn.com/hk/quote" target="_blank">富途牛牛</a>
+  <a href="https://www.tradingview.com/markets/" target="_blank">TradingView</a>
+  <a href="https://finviz.com/map.ashx" target="_blank">Finviz 熱力圖</a>
+  <a href="https://www.investing.com/economic-calendar/" target="_blank">Investing 經濟日曆</a>
+  <a href="https://stockcharts.com/freecharts/" target="_blank">StockCharts</a>
+  <a href="https://rsch.baml.com/" target="_blank">BofA Global Research</a>
+  <a href="https://finance.yahoo.com/markets/" target="_blank">Yahoo Finance</a>
+  <a href="https://tw.stock.yahoo.com/" target="_blank">Yahoo 股市</a>
+</div>
+
+<!-- 資料來源 modal -->
+<div class="modal" id="mSrc"><div class="box">
+  <h3>資料來源說明</h3>
+  <div class="srclist">
+    <a href="https://www.tradingview.com/widget/" target="_blank">TradingView Widgets<span>指數、個股、熱力圖、經濟日曆、Top Stories（即時自動更新）</span></a>
+    <a href="https://news.google.com/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx6TVdZU0FucG9HZ0pVVnlnQVAB?hl=zh-TW&gl=TW&ceid=TW%3Azh-Hant" target="_blank">Google 新聞・商業頭條<span>依 Google 重要性排序的財經、國際、AI 新聞（每 5 分鐘重抓）</span></a>
+    <a href="https://www.futunn.com/hk/quote" target="_blank">富途牛牛<span>港美股報價、資金流向</span></a>
+    <a href="https://finviz.com/map.ashx" target="_blank">Finviz<span>S&amp;P 500 熱力圖、篩選器</span></a>
+    <a href="https://www.investing.com/economic-calendar/" target="_blank">Investing.com<span>完整經濟日曆、央行利率</span></a>
+    <a href="https://stockcharts.com/freecharts/" target="_blank">StockCharts<span>技術線圖、市場廣度</span></a>
+    <a href="https://rsch.baml.com/" target="_blank">BofA Global Research<span>需帳號登入</span></a>
+    <a href="https://finance.yahoo.com/markets/" target="_blank">Yahoo Finance<span>美股報價與新聞</span></a>
+  </div>
+  <div class="row"><button onclick="closeM()">關閉</button></div>
+</div></div>
+
+<!-- 設定 modal -->
+<div class="modal" id="mSet"><div class="box">
+  <h3>設定</h3>
+  <label>全球主要股市（每行一個：名稱,TradingView代碼）</label>
+  <textarea id="sIdx" rows="9"></textarea>
+  <label>美國 AI 股小卡（每行一個 TradingView 代碼）</label>
+  <textarea id="sAI" rows="5"></textarea>
+  <label>我的觀察清單（每行一個：名稱,代碼）</label>
+  <textarea id="sWatch" rows="6"></textarea>
+  <label>台股主圖代碼</label>
+  <input id="sTaiex">
+  <label>新聞自動重抓間隔</label>
+  <select id="sInt"><option value="3">3 分鐘</option><option value="5">5 分鐘</option><option value="10">10 分鐘</option><option value="30">30 分鐘</option></select>
+  <div class="row"><button onclick="resetCfg()">還原預設</button><button onclick="closeM()">取消</button><button class="pri" onclick="saveCfg()">儲存並重新載入</button></div>
+</div></div>
+
+<script>
+/* ================= 設定 ================= */
+const DEFAULT = {
+  taiex: "TWSE:TAIEX",
+  idx: [
+    ["S&P 500","FOREXCOM:SPXUSD"],["那斯達克 100","FOREXCOM:NSXUSD"],["日經 225","INDEX:NKY"],
+    ["韓國 KOSPI","KRX:KOSPI"],["香港恒生","HSI:HSI"],["上證指數","SSE:000001"],
+    ["德國 DAX","INDEX:DEU40"],["英國富時","FOREXCOM:UKXGBP"],["印度 Nifty","NSE:NIFTY"]
+  ],
+  ai: ["NASDAQ:NVDA","NYSE:TSM","NASDAQ:MSFT","NASDAQ:GOOGL","NASDAQ:META","NASDAQ:AMZN","NASDAQ:AAPL","NASDAQ:AVGO","NASDAQ:AMD"],
+  watch: [["台積電","TWSE:2330"],["鴻海","TWSE:2317"],["NVIDIA","NASDAQ:NVDA"],["騰訊","HKEX:700"],["豐田","TSE:7203"],["美元/台幣","FX_IDC:USDTWD"],["黃金","TVC:GOLD"],["美10年債","TVC:US10Y"]],
+  interval: 5
+};
+let CFG;
+try{CFG = Object.assign({}, DEFAULT, JSON.parse(localStorage.getItem("mdash_cfg")||"{}"));}catch(e){CFG = {...DEFAULT};}
+
+/* ================= 工具 ================= */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function tv(el, name, cfg){
+  const box = typeof el === "string" ? document.getElementById(el) : el;
+  if(!box) return;
+  box.innerHTML = "";
+  const wrap = document.createElement("div");
+  wrap.className = "tradingview-widget-container"; wrap.style.height = "100%"; wrap.style.width = "100%";
+  const w = document.createElement("div"); w.className = "tradingview-widget-container__widget"; w.style.height = "100%";
+  const s = document.createElement("script");
+  s.src = "https://s3.tradingview.com/external-embedding/embed-widget-" + name + ".js";
+  s.async = true; s.type = "text/javascript";
+  s.innerHTML = JSON.stringify(Object.assign({locale:"zh_TW", colorTheme:"light", isTransparent:true}, cfg));
+  wrap.appendChild(w); wrap.appendChild(s); box.appendChild(wrap);
+}
+function ago(d){
+  const m = Math.round((Date.now() - d) / 60000);
+  if (isNaN(m)) return "";
+  if (m < 60) return m + " 分鐘前";
+  if (m < 1440) return Math.round(m/60) + " 小時前";
+  return Math.round(m/1440) + " 天前";
+}
+
+/* ================= 時鐘 ================= */
+function tick(){
+  const d = new Date();
+  $("#clock").textContent = d.toLocaleString("zh-TW",{year:"numeric",month:"2-digit",day:"2-digit",weekday:"short",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+}
+setInterval(tick, 1000); tick();
+
+/* ================= TradingView 元件 ================= */
+const loaded = {};
+function loadWorld(){
+  tv("tape","ticker-tape",{symbols:[
+    {proName:CFG.taiex,title:"台股加權"},{proName:"FOREXCOM:SPXUSD",title:"S&P 500"},{proName:"FOREXCOM:NSXUSD",title:"那斯達克100"},
+    {proName:"NASDAQ:SOX",title:"費城半導體"},{proName:"INDEX:NKY",title:"日經225"},{proName:"HSI:HSI",title:"恒生"},
+    {proName:"TVC:US10Y",title:"美10年債"},{proName:"TVC:DXY",title:"美元指數"},{proName:"FX_IDC:USDTWD",title:"美元/台幣"},
+    {proName:"FX:USDJPY",title:"美元/日圓"},{proName:"TVC:USOIL",title:"WTI 原油"},{proName:"TVC:GOLD",title:"黃金"},{proName:"BITSTAMP:BTCUSD",title:"比特幣"}],
+    showSymbolLogo:true,displayMode:"adaptive"});
+  tv("tv-taiex","symbol-overview",{symbols:[["台股加權",CFG.taiex+"|12M"],["櫃買指數","TPEX:TWOII|12M"],["台積電","TWSE:2330|12M"]],
+    chartOnly:false,width:"100%",height:"100%",autosize:true,showVolume:false,chartType:"area",
+    lineColor:"rgba(214,41,59,1)",topColor:"rgba(214,41,59,.25)",bottomColor:"rgba(214,41,59,0)",
+    scalePosition:"right",scaleMode:"Normal",dateRanges:["1d|1","1m|30","3m|60","12m|1D","60m|1W","all|1M"]});
+  const mini = $("#mini"); mini.innerHTML = "";
+  CFG.idx.forEach(([n,s]) => { const d=document.createElement("div"); mini.appendChild(d);
+    tv(d,"mini-symbol-overview",{symbol:s,width:"100%",height:"100%",dateRange:"1M",autosize:true,chartOnly:false,noTimeScale:true,
+      trendLineColor:"rgba(75,63,214,1)",underLineColor:"rgba(75,63,214,.12)",underLineBottomColor:"rgba(75,63,214,0)"}); });
+  tv("tv-ai","symbol-overview",{symbols:[["費城半導體","NASDAQ:SOX|12M"],["NVIDIA","NASDAQ:NVDA|12M"],["台積電ADR","NYSE:TSM|12M"],["博通","NASDAQ:AVGO|12M"],["AMD","NASDAQ:AMD|12M"]],
+    width:"100%",height:"100%",autosize:true,chartType:"area",lineColor:"rgba(139,63,224,1)",topColor:"rgba(139,63,224,.22)",bottomColor:"rgba(139,63,224,0)",
+    showVolume:false,dateRanges:["1d|1","1m|30","3m|60","12m|1D","60m|1W"]});
+  const tiles = $("#ai-tiles"); tiles.innerHTML = "";
+  CFG.ai.forEach(s => { const d=document.createElement("div"); tiles.appendChild(d); tv(d,"single-quote",{symbol:s,width:"100%"}); });
+  tv("tv-timeline","timeline",{feedMode:"all_symbols",displayMode:"regular",width:"100%",height:"100%"});
+  loaded.world = true;
+}
+function loadBrief(){
+  tv("tv-overview","market-overview",{width:"100%",height:"100%",dateRange:"1D",showChart:true,showSymbolLogo:true,
+    plotLineColorGrowing:"rgba(214,41,59,1)",plotLineColorFalling:"rgba(20,153,90,1)",
+    tabs:[
+      {title:"指數",symbols:[{s:CFG.taiex,d:"台股加權"},{s:"FOREXCOM:SPXUSD",d:"S&P 500"},{s:"FOREXCOM:NSXUSD",d:"那斯達克100"},{s:"NASDAQ:SOX",d:"費城半導體"},{s:"INDEX:NKY",d:"日經225"},{s:"HSI:HSI",d:"恒生"}]},
+      {title:"債匯",symbols:[{s:"TVC:US10Y",d:"美10年債"},{s:"TVC:US02Y",d:"美2年債"},{s:"TVC:DXY",d:"美元指數"},{s:"FX_IDC:USDTWD",d:"美元/台幣"},{s:"FX:USDJPY",d:"美元/日圓"}]},
+      {title:"商品",symbols:[{s:"TVC:USOIL",d:"WTI 原油"},{s:"TVC:UKOIL",d:"布蘭特原油"},{s:"TVC:GOLD",d:"黃金"},{s:"TVC:SILVER",d:"白銀"},{s:"BITSTAMP:BTCUSD",d:"比特幣"}]}
+    ]});
+  tv("tv-cal2","events",{width:"100%",height:"100%",importanceFilter:"0,1",countryFilter:"us,tw,jp,cn,eu,gb,kr,hk"});
+  tv("tv-heat","stock-heatmap",{exchanges:[],dataSource:"SPX500",grouping:"sector",blockSize:"market_cap_basic",blockColor:"change",
+    hasTopBar:true,isDataSetEnabled:false,isZoomEnabled:true,hasSymbolTooltip:true,width:"100%",height:"100%"});
+  loaded.brief = true;
+}
+function loadAssets(){
+  tv("tv-watch","market-quotes",{width:"100%",height:"100%",showSymbolLogo:true,
+    symbolsGroups:[{name:"我的觀察清單",symbols:CFG.watch.map(([n,s])=>({name:s,displayName:n}))}]});
+  tv("tv-adv","advanced-chart",{autosize:true,symbol:(CFG.watch[0]||["",CFG.taiex])[1],interval:"D",timezone:"Asia/Taipei",
+    style:"1",allow_symbol_change:true,hide_side_toolbar:false,studies:["STD;MA%Ribbon","STD;RSI"],support_host:"https://www.tradingview.com"});
+  loaded.assets = true;
+}
+
+/* ================= 新聞（Google 新聞 RSS，依重要性排序） ================= */
+const GN = (q) => "https://news.google.com/rss/search?q=" + encodeURIComponent(q + " when:1d") + "&hl=zh-TW&gl=TW&ceid=TW:zh-Hant";
+const GN_TOPIC = (t) => "https://news.google.com/rss/headlines/section/topic/" + t + "?hl=zh-TW&gl=TW&ceid=TW:zh-Hant";
+const PROXIES = [
+  u => fetch("https://api.allorigins.win/get?url=" + encodeURIComponent(u)).then(r => r.json()).then(j => j.contents),
+  u => fetch("https://corsproxy.io/?url=" + encodeURIComponent(u)).then(r => r.text()),
+  u => fetch("https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(u)).then(r => r.json())
+        .then(j => { if (j.status !== "ok") throw 0; return {json:j}; })
+];
+async function getFeed(url){
+  const key = "mdash_feed_" + url;
+  for (const p of PROXIES){
+    try{
+      const res = await Promise.race([p(url), new Promise((_,rej)=>setTimeout(()=>rej("timeout"),9000))]);
+      let items;
+      if (res && res.json){
+        items = res.json.items.map(i => ({title:i.title, link:i.link, date:new Date(i.pubDate.replace(" ","T")+"Z")}));
+      } else {
+        const doc = new DOMParser().parseFromString(res, "text/xml");
+        items = [...doc.querySelectorAll("item")].map(i => ({
+          title:i.querySelector("title")?.textContent||"", link:i.querySelector("link")?.textContent||"#",
+          date:new Date(i.querySelector("pubDate")?.textContent||"")}));
+      }
+      if (!items.length) throw 0;
+      items = items.map(it => { const m = it.title.match(/^(.*) - ([^-]+)$/); return m ? {...it,title:m[1],src:m[2]} : {...it,src:""}; });
+      try{ localStorage.setItem(key, JSON.stringify(items)); }catch(e){}
+      return items;
+    }catch(e){ /* 換下一個來源 */ }
+  }
+  try{ const c = JSON.parse(localStorage.getItem(key)||"null"); if (c) return c.map(i=>({...i,date:new Date(i.date),stale:true})); }catch(e){}
+  return [];
+}
+function dedupe(items){
+  const seen = new Set();
+  return items.filter(i => { const k = i.title.replace(/\s/g,"").slice(0,18); if (seen.has(k)) return false; seen.add(k); return true; });
+}
+
+/* 局勢分類＋嚴重度（關鍵字） */
+const TAGS = [
+  {k:/戰爭|空襲|飛彈|轟炸|開戰|攻擊|襲擊|交火|軍事行動|戰事/, t:"戰爭・衝突", c:"#e0393e", w:3},
+  {k:/油價|原油|油輪|OPEC|天然氣|荷莫茲/, t:"能源", c:"#d68a0b", w:2},
+  {k:/停火|談判|和談|協議|會談|峰會/, t:"停火・談判", c:"#2f6fe0", w:2},
+  {k:/疫情|病毒|伊波拉|傳染|WHO|世衛/, t:"疫情", c:"#8b3fe0", w:2},
+  {k:/關稅|制裁|出口管制|貿易戰/, t:"貿易・制裁", c:"#0f8a8a", w:2},
+  {k:/抗議|動亂|罷工|示威/, t:"動亂・抗議", c:"#e06a1f", w:1},
+  {k:/選舉|總統|國會|政府|政策|川普|Trump/, t:"政治", c:"#4a5468", w:1},
+  {k:/Fed|聯準會|升息|降息|利率|央行/, t:"央行", c:"#c2183f", w:2},
+  {k:/非農|CPI|通膨|GDP|失業率|PMI/, t:"經濟數據", c:"#14995a", w:2},
+  {k:/台股|加權|台積電|櫃買/, t:"台股", c:"#c2183f", w:1},
+  {k:/美股|道瓊|那斯達克|標普|S&P/, t:"美股", c:"#4b3fd6", w:1},
+  {k:/AI|人工智慧|輝達|NVIDIA|OpenAI|晶片|半導體/, t:"AI", c:"#8b3fe0", w:1},
+];
+function classify(title){
+  let tag = null, sev = 1;
+  for (const g of TAGS){ if (g.k.test(title)){ if(!tag) tag = g; sev = Math.max(sev, g.w); } }
+  if (/死亡|罹難|暴跌|崩跌|重挫|熔斷|緊急|升級|擴大/.test(title)) sev = Math.min(3, sev + 1);
+  return {tag: tag || {t:"焦點", c:"#7a8094"}, sev};
+}
+function renderList(el, items, {max=6, tags=true, sort=false}={}){
+  let arr = dedupe(items).map((it, i) => ({...it, ...classify(it.title), rank:i}));
+  if (sort) arr.sort((a,b) => b.sev - a.sev || a.rank - b.rank);
+  arr = arr.slice(0, max);
+  if (!arr.length){ el.innerHTML = '<li class="loading">暫時抓不到新聞（新聞代理伺服器忙碌），稍後會自動重試。</li>'; return; }
+  el.innerHTML = arr.map(it => `<li>
+    ${tags ? `<span class="tag" style="background:${it.tag.c}">${it.tag.t}</span>` : ""}
+    ${sort ? `<span class="dots">${"●".repeat(it.sev)}${'<span style="color:#ddd">●</span>'.repeat(3-it.sev)}</span>` : ""}
+    <div class="tx"><a href="${esc(it.link)}" target="_blank" rel="noopener">${esc(it.title)}</a>
+    <div class="meta">${esc(it.src||"")}${it.src?"・":""}${ago(it.date)}${it.stale?"・離線快取":""}</div></div></li>`).join("");
+}
+
+/* 頂部 5 張警示卡：各主題 Google 新聞排序第一則 */
+const ALERTS = [
+  {name:"地緣政治", q:"(戰爭 OR 空襲 OR 飛彈 OR 中東 OR 伊朗 OR 烏克蘭)", c:"var(--c1)", icon:"⚠"},
+  {name:"能源・油價", q:"(油價 OR 原油 OR OPEC OR 油輪)", c:"var(--c2)", icon:"🛢"},
+  {name:"央行・利率", q:"(聯準會 OR Fed OR 降息 OR 升息 OR 央行)", c:"var(--c3)", icon:"🏦"},
+  {name:"美股・AI", q:"(美股 OR 輝達 OR 那斯達克 OR AI股)", c:"var(--c4)", icon:"🇺🇸"},
+  {name:"台股", q:"(台股 OR 加權指數 OR 台積電)", c:"var(--c5)", icon:"🔔"},
+];
+async function loadAlerts(){
+  const box = $("#alerts");
+  if (!box.children.length) box.innerHTML = ALERTS.map(a => `<a class="al" style="background:${a.c}" target="_blank"><div class="t">${a.icon} ${a.name}</div><div class="h">載入中…</div><div class="s"></div></a>`).join("");
+  await Promise.all(ALERTS.map(async (a, i) => {
+    const items = await getFeed(GN(a.q));
+    const el = box.children[i];
+    if (items[0]){ el.href = items[0].link; el.querySelector(".h").textContent = items[0].title; el.querySelector(".s").textContent = (items[0].src||"") + "・" + ago(items[0].date); }
+    else el.querySelector(".h").textContent = "暫無資料";
+  }));
+}
+
+async function loadNews(){
+  const [biz, world, ai] = await Promise.all([GN_TOPIC("BUSINESS"), GN_TOPIC("WORLD"), GN("(AI OR 人工智慧 OR 輝達 OR OpenAI OR 半導體 OR 台積電)")].map(getFeed));
+  renderList($("#n-fin"), biz, {max:7});
+  renderList($("#n-geo"), world, {max:6, sort:true});
+  renderList($("#n-ai"), ai, {max:9});
+  const top = dedupe(biz).slice(0,4).map(i => i.title);
+  $("#oneline").textContent = top.length ? top.join("　｜　") : "暫時抓不到頭條，稍後自動重試";
+  $("#upd").textContent = "更新於 " + new Date().toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
+  loadAlerts();
+}
+async function loadBriefNews(){
+  const [tw, us] = await Promise.all([GN("(台股 OR 加權指數 OR 外資 OR 台積電)"), GN("(美股 OR 道瓊 OR 那斯達克 OR 標普500)")].map(getFeed));
+  renderList($("#n-tw"), tw, {max:10});
+  renderList($("#n-us"), us, {max:10});
+}
+
+/* ================= 分頁 / 按鈕 ================= */
+let view = "world";
+function showView(v){
+  view = v;
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.v === v));
+  document.querySelectorAll(".view").forEach(s => s.classList.toggle("on", s.id === "v-" + v));
+  if (v === "brief" && !loaded.brief){ loadBrief(); loadBriefNews(); }
+  if (v === "assets" && !loaded.assets) loadAssets();
+  try{ localStorage.setItem("mdash_view", v); }catch(e){}
+}
+document.querySelectorAll("#tabs button").forEach(b => b.onclick = () => showView(b.dataset.v));
+document.querySelectorAll("#fin-tabs button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#fin-tabs button").forEach(x => x.classList.toggle("on", x === b));
+  const cal = b.dataset.t === "cal";
+  $("#n-fin").style.display = cal ? "none" : ""; $("#tv-cal").style.display = cal ? "" : "none";
+  if (cal && !loaded.cal){ tv("tv-cal","events",{width:"100%",height:"100%",importanceFilter:"0,1",countryFilter:"us,tw,jp,cn,eu"}); loaded.cal = true; }
+});
+$("#btnRefresh").onclick = () => {
+  loadNews();
+  if (view === "brief") loadBriefNews();
+  loadWorld(); if (loaded.brief) loadBrief(); if (loaded.assets) loadAssets(); loaded.cal = false;
+  if ($("#tv-cal").style.display !== "none"){ tv("tv-cal","events",{width:"100%",height:"100%",importanceFilter:"0,1",countryFilter:"us,tw,jp,cn,eu"}); loaded.cal = true; }
+};
+$("#btnSrc").onclick = () => $("#mSrc").classList.add("on");
+$("#btnSet").onclick = () => {
+  $("#sIdx").value = CFG.idx.map(r => r.join(",")).join("\n");
+  $("#sAI").value = CFG.ai.join("\n");
+  $("#sWatch").value = CFG.watch.map(r => r.join(",")).join("\n");
+  $("#sTaiex").value = CFG.taiex; $("#sInt").value = String(CFG.interval);
+  $("#mSet").classList.add("on");
+};
+function closeM(){ document.querySelectorAll(".modal").forEach(m => m.classList.remove("on")); }
+document.querySelectorAll(".modal").forEach(m => m.addEventListener("click", e => { if (e.target === m) closeM(); }));
+const pairs = t => t.split("\n").map(l => l.trim()).filter(Boolean).map(l => { const p = l.split(","); return p.length > 1 ? [p[0].trim(), p.slice(1).join(",").trim()] : [p[0].trim(), p[0].trim()]; });
+function saveCfg(){
+  CFG = {taiex:$("#sTaiex").value.trim()||DEFAULT.taiex, idx:pairs($("#sIdx").value), ai:$("#sAI").value.split("\n").map(s=>s.trim()).filter(Boolean),
+         watch:pairs($("#sWatch").value), interval:+$("#sInt").value};
+  try{ localStorage.setItem("mdash_cfg", JSON.stringify(CFG)); }catch(e){}
+  location.reload();
+}
+function resetCfg(){ try{ localStorage.removeItem("mdash_cfg"); }catch(e){} location.reload(); }
+
+/* ================= 啟動 ================= */
+loadWorld();
+loadNews();
+setInterval(() => { loadNews(); if (loaded.brief) loadBriefNews(); }, CFG.interval * 60000);
+try{ const v = localStorage.getItem("mdash_view"); if (v && v !== "world") showView(v); }catch(e){}
+</script>
+</body>
+</html>
