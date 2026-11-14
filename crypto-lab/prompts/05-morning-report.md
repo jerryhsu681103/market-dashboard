@@ -1,4 +1,5 @@
 每天早上 8 點（北京時間）整理一份研究日報，寫進 reports/日期.md：
+（排程執行時：先切到 `crypto-lab-research` 分支，沒有就從 main 建立；在 crypto-lab/ 執行 `bash setup.sh`；寫完後 commit 並推送到同一分支。）
 1. 昨晚跑了幾個點子，各死在哪一關，死因一句話
 2. 活下來的點子：每關成績、p 值、第 4 關門檻、參數熱力圖路徑
 3. 紙面觀察名單裡的策略：先執行 python -m lab.download_data --daily 與 python -m lab.paper，

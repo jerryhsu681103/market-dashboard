@@ -7,13 +7,12 @@
 
 ```bash
 cd crypto-lab
-python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m lab.download_data        # 下載 K 線與資金費率（data.binance.vision）
-.venv/bin/python -m lab.download_extra       # 下載未平倉量／多空比、現貨、溢價指數、訂單簿深度
-.venv/bin/python -m pytest                   # 引擎測試
-# 先在 config/costs.json 填入 fee、slippage（單邊比例）
+bash setup.sh                                # 建虛擬環境、裝套件、下載資料、跑測試
 .venv/bin/python smoke_test.py               # 02 煙霧測試
 ```
+
+研究流程：`scripts/stage1.py` → `stage2.py` → `stage3.py` → `stage4.py`（各腳本開頭有用法）。
+排程產生的研究結果推送到 `crypto-lab-research` 分支。
 
 ## 目錄
 
