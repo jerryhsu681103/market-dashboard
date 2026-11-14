@@ -112,6 +112,22 @@ IDEAS = {
         "grid": {"k": [0.5, 1.0, 1.5, 2.0, 2.5], "hold": [3, 6, 12, 18, 30]},
         "rationale": "被套部位擠壓：逆勢加碼的槓桿方被迫回補",
     },
+    # ---- 第五批：新資料集第二輪
+    "spot_perp_flow_divergence": {
+        "native_tf": "4h", "features": ["spot"],
+        "grid": {"threshold": [0.5, 1.0, 1.5, 2.0, 2.5], "window": [3, 6, 12, 18, 30]},
+        "rationale": "現貨與永續主動買賣流分歧：現貨真實需求吸收槓桿賣壓，槓桿方被迫回補",
+    },
+    "oi_buildup_breakout": {
+        "native_tf": "4h", "features": ["metrics"],
+        "grid": {"oi_z": [0.0, 0.5, 1.0, 1.5, 2.0], "channel": [6, 12, 18, 30, 42]},
+        "rationale": "槓桿堆積後突破：未平倉量堆積後，突破反向的槓桿部位被迫止損",
+    },
+    "covering_move_fade": {
+        "native_tf": "4h", "features": ["metrics"],
+        "grid": {"k": [0.5, 1.0, 1.5, 2.0, 2.5], "hold": [3, 6, 12, 18, 30]},
+        "rationale": "平倉驅動行情的反向：未平倉量下降的行情由平倉推動，推力耗盡後回吐",
+    },
 }
 
 def grid_for(spec: dict, timeframe: str) -> dict:
