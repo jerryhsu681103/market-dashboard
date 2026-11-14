@@ -47,6 +47,20 @@ IDEAS = {
         "grid": {"lookback": [72, 168, 336, 720], "k": [1.5, 2.0, 2.5, 3.0, 4.0]},
         "rationale": "量能高潮反轉：累積偏離加量能創新高，追價資金集中出清後回落",
     },
+    "trend_pullback": {
+        "grid": {"trend_len": [240, 480, 720, 1200, 1680], "threshold": [1.0, 1.5, 2.0, 2.5, 3.0]},
+        "rationale": "趨勢中的回檔進場：趨勢內短線恐慌停損的弱手，賺回檔修復",
+    },
+    "lowvol_meanrev": {
+        "grid": {"threshold": [1.5, 2.0, 2.5, 3.0, 3.5], "vol_pct": [0.2, 0.3, 0.4, 0.5, 0.6]},
+        "rationale": "低波動環境短線均值回歸：平靜時期的偏離多為流動性需求造成",
+    },
+    "btc_eth_lead_lag": {
+        "grid": {"threshold": [0.005, 0.01, 0.015, 0.02, 0.03], "hold": [1, 3, 6, 12, 24]},
+        "rationale": "BTC 領先 ETH：ETH 價格發現落後，買入（賣出）尚未跟上的 ETH",
+        "symbol": "ETHUSDT",
+        "attach": ["BTCUSDT"],
+    },
 }
 
 GATE = {"min_sharpe": 1.0, "min_pf": 1.2, "min_trades": 100, "too_good_sharpe": 4.0, "too_good_dd": -0.03}
@@ -72,11 +86,9 @@ def judge(best: pd.Series | None, plateau: dict) -> tuple[str, str]:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("ideas", nargs="+")
-    ap.add_argument("--symbol", default="BTCUSDT")
+    ap.add_argument("--symbol", default="BTCUSDT")  # 點子未指定 symbol 時使用
     a = ap.parse_args()
     fee, slip = load_costs()
-    df, funding = load_insample(a.symbol)
-    df = attach_funding(df, funding)
     today = datetime.now(timezone.utc).date().isoformat()
     log_path = ROOT / "research_log.csv"
     n_prev = len(pd.read_csv(log_path))
@@ -85,20 +97,28 @@ def main():
         spec = IDEAS[name]
         fn = importlib.import_module(f"strategies.{name}").signal
         grid = spec["grid"]
+        symbol = spec.get("symbol", a.symbol)
+        df, funding = load_insample(symbol)
+        df = attach_funding(df, funding)
+        for other in spec.get("attach", []):
+            odf, _ = load_insample(other)
+            if not odf.index.equals(df.index):
+                raise ValueError(f"{other} 與 {symbol} 時間索引不一致")
+            df[f"{other}_close"] = odf["close"]
         res = research.grid_search(fn, grid, df, fee, slip, funding)
-        out_csv = ROOT / "reports" / "stage1" / f"{name}_{a.symbol}.csv"
+        out_csv = ROOT / "reports" / "stage1" / f"{name}_{symbol}.csv"
         out_csv.parent.mkdir(parents=True, exist_ok=True)
         res.to_csv(out_csv, index=False)
 
         x, y = list(grid)
-        hm = research.save_heatmap(res, x, y, ROOT / "reports" / "heatmaps" / f"{name}_{a.symbol}_stage1.png",
-                                   title=f"{name} {a.symbol} in-sample Sharpe")
+        hm = research.save_heatmap(res, x, y, ROOT / "reports" / "heatmaps" / f"{name}_{symbol}_stage1.png",
+                                   title=f"{name} {symbol} in-sample Sharpe")
         eligible = res[res["trade_count"] >= GATE["min_trades"]]
         best = eligible.loc[eligible["sharpe"].idxmax()] if not eligible.empty else None
         plateau = research.plateau_check(eligible if not eligible.empty else res, grid)
         status, reason = judge(best, plateau)
 
-        summary = {"symbol": a.symbol, "best_params": {k: next(v for v in grid[k] if v == best[k]) for k in grid} if best is not None else None,
+        summary = {"symbol": symbol, "best_params": {k: next(v for v in grid[k] if v == best[k]) for k in grid} if best is not None else None,
                    "sharpe": None if best is None else round(float(best["sharpe"]), 4),
                    "pf": None if best is None else round(float(best["profit_factor"]), 4),
                    "total_return": None if best is None else round(float(best["total_return"]), 4),
@@ -114,7 +134,7 @@ def main():
                 "", "", "", "", str(hm.relative_to(ROOT)),
                 {"pass": "alive_stage1", "dead": "dead_stage1", "review": "review_stage1"}[status],
                 reason, n_prev + i,
-                f"python -m scripts.stage1 {name} --symbol {a.symbol}  ({out_csv.relative_to(ROOT)})",
+                f"python -m scripts.stage1 {name} --symbol {symbol}  ({out_csv.relative_to(ROOT)})",
             ])
 
 
