@@ -48,7 +48,7 @@ def main():
         log = pd.read_csv(log_path, dtype=str)
         row = log[(log["idea"] == a.idea) & (log["timeframe"] == tf)]
         if len(row) != 1 or row["status"].iat[0] != "alive_stage3":
-            raise RuntimeError(f"{a.idea} [{tf}] 不是 alive_stage3，不能進第 4 關")
+            raise SystemExit(f"{a.idea} [{tf}] 不是 alive_stage3，不能進第 4 關")
         df, funding = load_full(symbol, idea=f"{a.idea}@{tf}", stage=4,
                                 reason="第 4 關前推置換檢驗", timeframe=tf)
         train_bars = int((df.index < insample_end(df)).sum())

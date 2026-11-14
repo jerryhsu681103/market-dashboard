@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# crypto-lab 單一入口。用法：./run <指令> [參數]
+set -euo pipefail
+cd "$(dirname "$0")"
+PY=.venv/bin/python
+
+usage() {
+  cat <<'TXT'
+crypto-lab：加密貨幣策略研究實驗室（只做研究與紙面交易，不連接交易所下單）
+
+用法：./run <指令> [參數]
+
+  setup                     建虛擬環境、裝套件、下載資料、跑測試（第一次使用先跑這個）
+  update                    把資料更新到昨天
+  test                      跑引擎測試
+  status                    研究進度總覽
+  smoke                     煙霧測試（EMA 20/50）
+  ideas                     列出所有已登錄的點子
+  stage1 <點子...>          第 1 關：樣本內參數掃描       例：./run stage1 daily_orb
+  stage2 <點子>             第 2 關：置換檢驗
+  stage3 <點子> [--dry-run] 第 3 關：滾動前推（正式執行會讀樣本外資料，每個點子只能一次）
+  stage4 <點子> [--dry-run] 第 4 關：前推置換檢驗（同上）
+  paper                     更新紙面觀察名單的表現
+
+stage1–4 預設使用 4 小時線；要改週期請加 --timeframe 1h。
+TXT
+}
+
+need_env() {
+  if [ ! -x "$PY" ] || [ ! -f data/BTCUSDT_1h.parquet ]; then
+    echo "尚未安裝或缺少資料，請先執行：./run setup" >&2
+    exit 1
+  fi
+}
+
+stage() {  # 沒有指定 --timeframe 時預設 4h
+  local mod="$1"; shift
+  for a in "$@"; do
+    if [ "$a" = "--timeframe" ]; then "$PY" -W ignore -m "$mod" "$@"; return; fi
+  done
+  "$PY" -W ignore -m "$mod" --timeframe 4h "$@"
+}
+
+cmd="${1:-help}"; shift || true
+case "$cmd" in
+  setup)  bash setup.sh ;;
+  update) need_env; "$PY" -m lab.download_data --daily; "$PY" -m lab.download_extra --sets metrics spot premium ;;
+  test)   need_env; "$PY" -m pytest -q ;;
+  status) need_env; "$PY" -m scripts.status ;;
+  smoke)  need_env; "$PY" smoke_test.py "$@" ;;
+  ideas)  need_env; "$PY" -c "
+from scripts.stage1 import IDEAS
+for k, v in IDEAS.items(): print(f'{k:28s} {v[\"rationale\"]}')" ;;
+  stage1|stage2|stage3|stage4)
+          need_env
+          [ $# -ge 1 ] || { echo "請指定點子名稱，例：./run $cmd daily_orb（可用 ./run ideas 查詢）" >&2; exit 1; }
+          stage "scripts.$cmd" "$@" ;;
+  paper)  need_env; "$PY" -m lab.download_data --daily; "$PY" -m lab.paper ;;
+  help|-h|--help) usage ;;
+  *) echo "不認得的指令：$cmd" >&2; usage; exit 1 ;;
+esac

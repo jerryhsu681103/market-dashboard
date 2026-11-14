@@ -7,8 +7,10 @@
 
 ```bash
 cd crypto-lab
-bash setup.sh                                # 建虛擬環境、裝套件、下載資料、跑測試
-.venv/bin/python smoke_test.py               # 02 煙霧測試
+./run setup      # 第一次使用：建虛擬環境、裝套件、下載資料、跑測試
+./run help       # 列出所有指令
+./run status     # 研究進度總覽
+./run stage1 <點子>   # 依序還有 stage2、stage3、stage4
 ```
 
 研究流程：`scripts/stage1.py` → `stage2.py` → `stage3.py` → `stage4.py`（各腳本開頭有用法）。

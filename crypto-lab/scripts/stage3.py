@@ -44,7 +44,7 @@ def main():
     log = pd.read_csv(ROOT / "research_log.csv", dtype=str)
     row = log[(log["idea"] == a.idea) & (log["timeframe"] == tf)]
     if len(row) != 1 or row["status"].iat[0] != "alive_stage2":
-        raise RuntimeError(f"{a.idea} [{tf}] 不是 alive_stage2，不能進第 3 關")
+        raise SystemExit(f"{a.idea} [{tf}] 不是 alive_stage2，不能進第 3 關")
     insample_sharpe = json.loads(row["stage1"].iat[0])["sharpe"]
 
     if a.dry_run:
