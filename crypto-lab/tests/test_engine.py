@@ -131,3 +131,20 @@ def test_plateau_spike_detection():
     rows = [{"a": a, "b": b, "sharpe": 1.5} for a in grid["a"] for b in grid["b"]]
     rows[4]["sharpe"] = 2.0
     assert not plateau_check(pd.DataFrame(rows), grid)["is_spike"]
+
+
+# ---------- 週期換算
+
+def test_resample_4h_and_bars_helper():
+    from lab.data import resample
+    from strategies._util import bars
+    df = make_df(48)
+    df4 = resample(df, "4h")
+    assert len(df4) == 12
+    assert df4["open"].iat[0] == df["open"].iat[0]
+    assert df4["close"].iat[0] == df["close"].iat[3]
+    assert df4["high"].iat[0] == df["high"].iloc[:4].max()
+    assert df4["volume"].iat[0] == pytest.approx(df["volume"].iloc[:4].sum())
+    assert bars(df, 720) == 720 and bars(df4, 720) == 180 and bars(df4, 3) == 1
+    # 不完整的週期丟棄
+    assert len(resample(df.iloc[1:], "4h")) == 11

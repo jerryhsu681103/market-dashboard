@@ -18,13 +18,32 @@ OOS_LOG = ROOT / "oos_access_log.csv"
 INSAMPLE_YEARS = 4
 
 
-def _read(symbol: str) -> tuple[pd.DataFrame, pd.Series]:
+AGG = {"open": "first", "high": "max", "low": "min", "close": "last", "volume": "sum",
+       "quote_volume": "sum", "trades": "sum", "taker_buy_volume": "sum", "taker_buy_quote_volume": "sum"}
+
+
+def resample(df: pd.DataFrame, timeframe: str) -> pd.DataFrame:
+    """把 1 小時 K 線合成較長週期（以 UTC 00:00 對齊，K 線標記為開盤時間）。
+
+    只保留成分 K 線完整的週期（例如 4 小時線必須有 4 根 1 小時線），不完整的丟棄。
+    """
+    if timeframe == "1h":
+        return df
+    rule = timeframe.lower()
+    need = int(pd.Timedelta(rule) / pd.Timedelta("1h"))
+    agg = {k: v for k, v in AGG.items() if k in df.columns}
+    out = df.resample(rule, origin="epoch", label="left", closed="left").agg(agg)
+    count = df["open"].resample(rule, origin="epoch", label="left", closed="left").count()
+    return out[count == need]
+
+
+def _read(symbol: str, timeframe: str = "1h") -> tuple[pd.DataFrame, pd.Series]:
     kp, fp = DATA / f"{symbol}_1h.parquet", DATA / f"{symbol}_funding.parquet"
     if not kp.exists() or not fp.exists():
         raise FileNotFoundError(f"找不到 {symbol} 資料，請先執行：python -m lab.download_data")
     df = pd.read_parquet(kp)
     funding = pd.read_parquet(fp)["funding_rate"]
-    return df, funding
+    return resample(df, timeframe), funding
 
 
 def insample_end(df: pd.DataFrame) -> pd.Timestamp:
@@ -32,8 +51,8 @@ def insample_end(df: pd.DataFrame) -> pd.Timestamp:
     return df.index[0] + pd.DateOffset(years=INSAMPLE_YEARS)
 
 
-def load_insample(symbol: str) -> tuple[pd.DataFrame, pd.Series]:
-    df, funding = _read(symbol)
+def load_insample(symbol: str, timeframe: str = "1h") -> tuple[pd.DataFrame, pd.Series]:
+    df, funding = _read(symbol, timeframe)
     end = insample_end(df)
     return df[df.index < end], funding[funding.index <= end]
 
@@ -46,13 +65,13 @@ def _logged(idea: str, stage: int) -> bool:
 
 
 def load_full(symbol: str, idea: str, stage: int, reason: str,
-              end: str | pd.Timestamp | None = None) -> tuple[pd.DataFrame, pd.Series]:
+              end: str | pd.Timestamp | None = None, timeframe: str = "1h") -> tuple[pd.DataFrame, pd.Series]:
     """讀取含樣本外的完整資料。stage 只能是 3 或 4（或 'recheck' 用 stage=6）。"""
     if stage not in (3, 4, 6):
         raise PermissionError("樣本外資料只允許第 3、4 關及每週複查（stage=6）使用")
     if stage in (3, 4) and _logged(idea, stage):
         raise PermissionError(f"點子 {idea!r} 已在第 {stage} 關看過樣本外資料，不得重看")
-    df, funding = _read(symbol)
+    df, funding = _read(symbol, timeframe)
     if end is not None:
         end = pd.Timestamp(end, tz="UTC") if pd.Timestamp(end).tzinfo is None else pd.Timestamp(end)
         df, funding = df[df.index < end], funding[funding.index < end]

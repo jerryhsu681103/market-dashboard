@@ -10,3 +10,14 @@ def hold_after(event: pd.Series, hold: int) -> pd.Series:
 def combine(long_flag: pd.Series, short_flag: pd.Series) -> pd.Series:
     """多空同時成立時空倉。"""
     return long_flag.astype(int) - short_flag.astype(int)
+
+
+def step_hours(df: pd.DataFrame) -> float:
+    """K 線週期（小時），由時間索引推得。"""
+    d = pd.Series(df.index[: min(len(df), 101)]).diff().dropna()
+    return d.median().total_seconds() / 3600
+
+
+def bars(df: pd.DataFrame, hours: float) -> int:
+    """把以小時定義的長度換算成根數（至少 1 根）。1 小時線時等於原值。"""
+    return max(1, int(round(hours / step_hours(df))))

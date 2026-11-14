@@ -8,9 +8,11 @@
 import numpy as np
 import pandas as pd
 
+from strategies._util import step_hours
+
 
 def signal(df: pd.DataFrame, start: int = 13, length: int = 4) -> pd.Series:
     # 第 t 根的信號決定第 t+1 根的持倉，所以看下一根的開盤小時
-    next_hour = (df.index.hour + 1) % 24
+    next_hour = (df.index.hour + int(step_hours(df))) % 24
     in_window = ((next_hour - start) % 24) < length
     return pd.Series(np.where(in_window, 1, 0), index=df.index)

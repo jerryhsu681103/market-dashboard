@@ -8,15 +8,16 @@
 import numpy as np
 import pandas as pd
 
-from strategies._util import combine, hold_after
+from strategies._util import bars, combine, hold_after
 
-WINDOW = 24 * 30
+WINDOW_H = 24 * 30  # 小時
 
 
 def signal(df: pd.DataFrame, k: float = 4.0, hold: int = 12) -> pd.Series:
+    w = bars(df, WINDOW_H)
     r = np.log(df["close"]).diff()
-    sd = r.rolling(WINDOW).std().shift(1)
-    vmed = df["volume"].rolling(WINDOW).median().shift(1)
+    sd = r.rolling(w).std().shift(1)
+    vmed = df["volume"].rolling(w).median().shift(1)
     spike = df["volume"] >= 3 * vmed
     long = hold_after((r <= -k * sd) & spike, hold)
     short = hold_after((r >= k * sd) & spike, hold)
