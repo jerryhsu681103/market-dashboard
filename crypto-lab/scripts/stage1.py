@@ -72,6 +72,22 @@ IDEAS = {
         "symbol": "ETHUSDT",
         "attach": ["BTCUSDT"],
     },
+    # ---- 第三批：為 4 小時線設計（只在 4 小時線測試）
+    "vol_squeeze_breakout": {
+        "native_tf": "4h",
+        "grid": {"squeeze_pct": [0.05, 0.1, 0.15, 0.2, 0.3], "channel": [6, 12, 18, 30, 42]},
+        "rationale": "波動壓縮後突破：低波動期賣波動的一方在擴張時被迫止損",
+    },
+    "multiday_dip_buy": {
+        "native_tf": "4h",
+        "grid": {"drop": [0.1, 0.15, 0.2, 0.25, 0.3], "hold": [6, 12, 18, 30, 42]},
+        "rationale": "多日深跌後承接（只做多）：多日去槓桿的被迫賣方，回升確認後進場",
+    },
+    "daily_orb": {
+        "native_tf": "4h",
+        "grid": {"buffer": [0.0, 0.1, 0.2, 0.3, 0.5], "min_ratio": [0.0, 0.25, 0.5, 0.75, 1.0]},
+        "rationale": "每日開盤區間突破：日內前段方向在後段延續，晚到的追價資金",
+    },
 }
 
 def grid_for(spec: dict, timeframe: str) -> dict:
@@ -79,6 +95,10 @@ def grid_for(spec: dict, timeframe: str) -> dict:
 
     換算規則在看到結果之前就固定，不針對新週期另外調參。
     """
+    if "native_tf" in spec:
+        if timeframe != spec["native_tf"]:
+            raise ValueError(f"此點子只在 {spec['native_tf']} 測試")
+        return spec["grid"]
     if timeframe == "1h":
         return spec["grid"]
     if timeframe in spec.get("grid_by_tf", {}):
