@@ -6,7 +6,7 @@
     - 形狀與跳空各自隨機打亂後重新拼回。
     - 起點價格與終點價格不變；每根 K 線的開高低收相對關係不變；成交量跟著形狀一起移動。
     - 時間索引不動：週末、時段等時間標籤留在原本的時間上（虛無假設 = 漲跌與時間無關）。
-    - 資金費率不打亂，留在原本的結算時間上。點子若以資金費率當信號，需在日誌註明「不確定」。
+    - 資金費率不打亂（含 df 裡 funding_ 開頭的欄位），留在原本的結算時間上。點子若以資金費率當信號，需在日誌註明「不確定」。
 
 start_index：只打亂這根之後的 K 線（第 4 關前推置換用：保留第一個訓練窗口）。
 多幣種點子用 permute_many，所有幣種套用同一組打亂順序，保留幣種間的相關性。
@@ -42,7 +42,8 @@ def _apply(df: pd.DataFrame, start_index: int, p_shape: np.ndarray, p_gap: np.nd
     out.iloc[s + 1:, out.columns.get_loc("high")] = np.exp(new_lo + h_rel)
     out.iloc[s + 1:, out.columns.get_loc("low")] = np.exp(new_lo + l_rel)
     out.iloc[s + 1:, out.columns.get_loc("close")] = np.exp(new_lc)
-    others = [c for c in df.columns if c not in PRICE]
+    # 成交量等 K 線屬性跟著形狀移動；funding_* 欄位留在原本的時間上，不打亂
+    others = [c for c in df.columns if c not in PRICE and not c.startswith("funding")]
     for c in others:
         col = out.columns.get_loc(c)
         out.iloc[s + 1:, col] = df[c].to_numpy()[s + 1:][p_shape]

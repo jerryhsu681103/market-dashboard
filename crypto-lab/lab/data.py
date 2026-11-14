@@ -64,3 +64,13 @@ def load_full(symbol: str, idea: str, stage: int, reason: str,
         w.writerow([datetime.now(timezone.utc).isoformat(timespec="seconds"), idea, stage,
                     symbol, str(df.index[-1]), reason])
     return df, funding
+
+
+def attach_funding(df: pd.DataFrame, funding: pd.Series) -> pd.DataFrame:
+    """把資金費率併成 df 的 funding_rate 欄位，給以資金費率當信號的點子用。
+
+    第 t 根 K 線（開盤時間 t）只看得到結算時間 ≤ t 的最新費率（向前填補），不含未來。
+    """
+    out = df.copy()
+    out["funding_rate"] = funding.reindex(df.index.union(funding.index)).ffill().reindex(df.index)
+    return out
