@@ -9,6 +9,7 @@
 cd crypto-lab
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/python -m lab.download_data        # 下載 K 線與資金費率（data.binance.vision）
+.venv/bin/python -m lab.download_extra       # 下載未平倉量／多空比、現貨、溢價指數、訂單簿深度
 .venv/bin/python -m pytest                   # 引擎測試
 # 先在 config/costs.json 填入 fee、slippage（單邊比例）
 .venv/bin/python smoke_test.py               # 02 煙霧測試

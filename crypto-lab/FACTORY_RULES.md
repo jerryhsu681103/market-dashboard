@@ -15,7 +15,14 @@
 - 不加槓桿：報酬以 1 倍名目本金計。
 
 ## 數據
-- 只用 `data/` 目錄下的檔案：`{symbol}_1h.parquet`（永續 1 小時 K 線）、`{symbol}_funding.parquet`（資金費率）。需要其他資料集，先寫進日誌並問我。
+- 只用 `data/` 目錄下的檔案：`{symbol}_1h.parquet`（永續 1 小時 K 線）、`{symbol}_funding.parquet`（資金費率），
+  以及 2026-11-14 經我同意新增的資料集（`python -m lab.download_extra`，以 `lab.data.attach_features` 併入）：
+  - `{symbol}_metrics_1h.parquet`：未平倉量、大戶／全市場多空比（BTC 從 2020-09、ETH 從 2021-12 起；**2022 年多空比欄位大量缺值**，見 `data/quality_extra_*.txt`）
+  - `{symbol}_spot_1h.parquet`：現貨 K 線
+  - `{symbol}_premium_1h.parquet`：溢價指數（資金費率由它計算，與資金費率點子資訊重疊）
+  - `{symbol}_depth_1h.parquet`：訂單簿深度（2023-01 起，樣本內不足，目前不得作為主要訊號）
+  需要其他資料集，先寫進日誌並問我。
+- 用到新資料集的點子，報告必須寫明該資料在樣本內的實際涵蓋期間與缺值情形。
 - 前 4 年為樣本內，用 `lab.data.load_insample()` 讀取。第 1、2 關只能用這個。
 - 之後的資料是樣本外，只在第 3、4 關用 `lab.data.load_full()` 讀取；每個點子每一關只能讀一次，程式會寫進 `oos_access_log.csv`，第二次讀取直接報錯。
 - 每週複查（stage=6）與紙面交易可讀樣本外，但**只能讓策略退場，不能拿來晉級或調參**。

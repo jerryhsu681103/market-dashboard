@@ -93,3 +93,51 @@ def attach_funding(df: pd.DataFrame, funding: pd.Series) -> pd.DataFrame:
     out = df.copy()
     out["funding_rate"] = funding.reindex(df.index.union(funding.index)).ffill().reindex(df.index)
     return out
+
+
+# ---------------------------------------------------------------- 額外資料集（2026-11-14 新增）
+
+FEATURE_AGG = {
+    # 快照類：取週期內最後一筆（收盤時已知）
+    "metrics": "last",
+    # K 線類：開高低收／加總
+    "spot": {"open": "first", "high": "max", "low": "min", "close": "last", "volume": "sum",
+             "quote_volume": "sum", "trades": "sum", "taker_buy_volume": "sum",
+             "taker_buy_quote_volume": "sum"},
+    "premium": {"open": "first", "high": "max", "low": "min", "close": "last"},
+    # 深度：週期內各小時平均
+    "depth": "mean",
+}
+
+
+def load_feature(symbol: str, name: str, timeframe: str = "1h") -> pd.DataFrame:
+    """讀取 data/{symbol}_{name}_1h.parquet，並彙整到指定週期。
+
+    每列只包含 [t, t+週期) 內的觀測，因此第 t 根 K 線收盤時已知，不含未來。
+    週期內小時數不完整時，該週期仍保留（快照類取已有的最後一筆），缺整個週期則為 NaN。
+    """
+    p = DATA / f"{symbol}_{name}_1h.parquet"
+    if not p.exists():
+        raise FileNotFoundError(f"找不到 {p.name}，請先執行：python -m lab.download_extra --sets {name}")
+    f = pd.read_parquet(p)
+    if name == "metrics":
+        f = f.where(f > 0)  # 未平倉量與多空比不可能 ≤ 0，視為資料錯誤（例如 2022-03-07 的 0 值）
+    if timeframe == "1h":
+        return f
+    agg = FEATURE_AGG[name]
+    r = f.resample(timeframe.lower(), origin="epoch", label="left", closed="left")
+    return (r.agg(agg) if isinstance(agg, dict) else getattr(r, agg)()).dropna(how="all")
+
+
+def attach_features(df: pd.DataFrame, symbol: str, names, timeframe: str = "1h") -> pd.DataFrame:
+    """把額外資料集併到 K 線 df（以 df 的索引對齊；df 已是樣本內時，特徵也只取樣本內）。
+
+    欄位命名：metrics 與 depth 保留原欄位名；spot、premium 加前綴 spot_、prem_。
+    """
+    out = df.copy()
+    for name in names:
+        f = load_feature(symbol, name, timeframe).reindex(df.index)
+        if name in ("spot", "premium"):
+            f = f.add_prefix("spot_" if name == "spot" else "prem_")
+        out = out.join(f)
+    return out

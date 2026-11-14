@@ -15,7 +15,7 @@ import pandas as pd
 
 from lab import engine, research
 from lab.costs import load_costs
-from lab.data import attach_funding, load_insample
+from lab.data import attach_features, attach_funding, load_insample
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -96,6 +96,22 @@ IDEAS = {
         "grid": {"lookback": [30, 60, 90, 180, 360], "entry_z": [1.0, 1.5, 2.0, 2.5, 3.0]},
         "rationale": "ETH/BTC 比值回歸（市場中性）：資金輪動造成的相對偏離傾向回歸，抵銷大盤回撤",
     },
+    # ---- 第四批：新資料集（使用者 2026-11-14 同意新增 metrics、spot、premium、depth）
+    "spot_led_move": {
+        "native_tf": "4h", "features": ["spot"],
+        "grid": {"threshold": [0.5, 1.0, 1.5, 2.0, 2.5], "window": [3, 6, 12, 18, 30]},
+        "rationale": "現貨主導的行情延續、槓桿主導的行情回吐：槓桿追價資金去槓桿",
+    },
+    "whale_retail_divergence": {
+        "native_tf": "4h", "features": ["metrics"],
+        "grid": {"threshold": [0.5, 1.0, 1.5, 2.0, 2.5], "hold": [3, 6, 12, 18, 30]},
+        "rationale": "大戶與散戶部位分歧：跟大戶、對散戶",
+    },
+    "trapped_positioning": {
+        "native_tf": "4h", "features": ["metrics"],
+        "grid": {"k": [0.5, 1.0, 1.5, 2.0, 2.5], "hold": [3, 6, 12, 18, 30]},
+        "rationale": "被套部位擠壓：逆勢加碼的槓桿方被迫回補",
+    },
 }
 
 def grid_for(spec: dict, timeframe: str) -> dict:
@@ -172,6 +188,8 @@ def main():
             symbol = spec.get("symbol", a.symbol)
             df, funding = load_insample(symbol, tf)
             df = attach_funding(df, funding)
+            if spec.get("features"):
+                df = attach_features(df, symbol, spec["features"], tf)
         for other in spec.get("attach", []):
             odf, _ = load_insample(other, tf)
             if not odf.index.equals(df.index):
