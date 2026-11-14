@@ -226,3 +226,59 @@ def metrics_table(result: dict) -> pd.Series:
             "max_drawdown", "trade_count", "win_rate", "exposure", "total_cost",
             "total_funding", "open_at_end", "fee", "slippage", "engine_version"]
     return pd.Series({k: result[k] for k in keys})
+
+
+# ---------------------------------------------------------------- 多腳（價差）部位
+
+def run_spread(signal_fn, params: dict, df: pd.DataFrame, fee, slippage,
+               funding: dict, *, legs: dict, check_lookahead_bias: bool = True,
+               keep_detail: bool = False) -> dict:
+    """價差回測：一個信號同時驅動多腳部位。
+
+    df：同一時間索引，欄位以幣種為前綴，例如 ETHUSDT_open、BTCUSDT_open（至少要有 {sym}_open）。
+    legs：{幣種: 權重}，例如 {"ETHUSDT": 1, "BTCUSDT": -1}。
+          信號 s ∈ {-1,0,1}；第 i 腳持倉 = s × 權重（每腳名目本金 = |權重|）。
+    funding：{幣種: 資金費率 Series}，每一腳都必須提供。
+    成交、成本、資金費規則與 run() 相同，逐腳計算後加總；交易以價差信號的連續持倉段計。
+    假設：每根 K 線結束時各腳名目本金恢復為固定值（與 run() 相同的固定名目假設），再平衡不另收成本。
+    """
+    cost_rate = _validate_costs(fee, slippage)
+    if not isinstance(df.index, pd.DatetimeIndex) or not df.index.is_monotonic_increasing \
+            or not df.index.is_unique:
+        raise ValueError("df 的索引必須是遞增且不重複的 DatetimeIndex")
+    for sym in legs:
+        col = f"{sym}_open"
+        if col not in df.columns:
+            raise ValueError(f"df 缺少欄位 {col}")
+        if df[col].isna().any() or (df[col] <= 0).any():
+            raise ValueError(f"{col} 有缺值或非正數")
+        if funding is None or sym not in funding:
+            raise ValueError(f"缺少 {sym} 的資金費率")
+
+    sig = compute_signals(signal_fn, df, params)
+    if check_lookahead_bias:
+        check_lookahead(signal_fn, df, params, full=sig)
+    s = sig.shift(1).fillna(0).to_numpy(float)
+
+    parts = []
+    for sym, w in legs.items():
+        o = df[f"{sym}_open"].to_numpy(float)
+        bar_ret = np.zeros(len(o))
+        bar_ret[:-1] = o[1:] / o[:-1] - 1.0
+        parts.append(simulate(s * w, bar_ret, funding_at_bar_end(df.index, funding[sym]),
+                              cost_rate, df.index))
+    detail = pd.DataFrame({
+        "pos": s,  # 價差部位（用來切分交易）
+        "gross": sum(p["gross"] for p in parts),
+        "funding": sum(p["funding"] for p in parts),
+        "entry_cost": sum(p["entry_cost"] for p in parts),
+        "exit_cost": sum(p["exit_cost"] for p in parts),
+    }, index=df.index)
+    detail["net"] = detail["gross"] + detail["funding"] - detail["entry_cost"] - detail["exit_cost"]
+    out = summarize(detail, infer_bars_per_year(df.index))
+    out.update({"params": dict(params), "fee": float(fee), "slippage": float(slippage),
+                "signals": sig, "legs": dict(legs)})
+    if keep_detail:
+        out["detail"] = detail
+        out["leg_detail"] = dict(zip(legs, parts))
+    return out

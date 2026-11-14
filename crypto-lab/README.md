@@ -20,7 +20,7 @@ python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 |---|---|
 | `FACTORY_RULES.md` | 研究規矩（每次開工前先讀） |
 | `prompts/01–07` | 各階段的工作指令 |
-| `lab/engine.py` | 回測引擎，所有數字的唯一來源：`run(signal_fn, params, df, fee, slippage, funding)` |
+| `lab/engine.py` | 回測引擎，所有數字的唯一來源：`run(...)`（單一幣種）、`run_spread(...)`（多腳價差） |
 | `lab/data.py` | 樣本內／樣本外切分；樣本外讀取記錄在 `oos_access_log.csv` |
 | `lab/permutation.py` | K 線置換（假行情） |
 | `lab/research.py` | 參數掃描、參數高原、滾動前推、置換檢驗、第 4 關門檻 |

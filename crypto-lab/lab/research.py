@@ -27,17 +27,18 @@ def _combos(grid: dict) -> list[dict]:
 
 
 def grid_search(signal_fn, grid: dict, df: pd.DataFrame, fee, slippage, funding,
-                valid=None) -> pd.DataFrame:
+                valid=None, run_fn=None) -> pd.DataFrame:
     """掃描所有參數組合，回傳每組的績效表。valid(params)->bool 可排除不合理組合（例如 fast>=slow）。
 
     第一組參數會做前視截斷檢查；其餘組合略過以節省時間（同一個信號函式）。
+    run_fn：預設 engine.run；價差點子傳 functools.partial(engine.run_spread, legs=...)，funding 傳 {幣種: Series}。
     """
     rows, checked = [], False
     for p in _combos(grid):
         if valid is not None and not valid(p):
             continue
-        r = engine.run(signal_fn, p, df, fee, slippage, funding,
-                       check_lookahead_bias=not checked)
+        r = (run_fn or engine.run)(signal_fn, p, df, fee, slippage, funding,
+                                   check_lookahead_bias=not checked)
         checked = True
         rows.append({**p, **{k: r[k] for k in ("sharpe", "profit_factor", "total_return",
                                                 "max_drawdown", "trade_count")}})

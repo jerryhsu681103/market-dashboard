@@ -5,6 +5,7 @@
 """
 import argparse
 import csv
+import functools
 import importlib
 import json
 from datetime import datetime, timezone
@@ -12,7 +13,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from lab import research
+from lab import engine, research
 from lab.costs import load_costs
 from lab.data import attach_funding, load_insample
 
@@ -88,6 +89,13 @@ IDEAS = {
         "grid": {"buffer": [0.0, 0.1, 0.2, 0.3, 0.5], "min_ratio": [0.0, 0.25, 0.5, 0.75, 1.0]},
         "rationale": "每日開盤區間突破：日內前段方向在後段延續，晚到的追價資金",
     },
+    # ---- 價差點子（engine.run_spread）
+    "eth_btc_ratio_revert": {
+        "native_tf": "4h",
+        "legs": {"ETHUSDT": 1, "BTCUSDT": -1},
+        "grid": {"lookback": [30, 60, 90, 180, 360], "entry_z": [1.0, 1.5, 2.0, 2.5, 3.0]},
+        "rationale": "ETH/BTC 比值回歸（市場中性）：資金輪動造成的相對偏離傾向回歸，抵銷大盤回撤",
+    },
 }
 
 def grid_for(spec: dict, timeframe: str) -> dict:
@@ -149,15 +157,27 @@ def main():
         grid = grid_for(spec, a.timeframe)
         tf = a.timeframe
         sfx = "" if tf == "1h" else f"_{tf}"
-        symbol = spec.get("symbol", a.symbol)
-        df, funding = load_insample(symbol, tf)
-        df = attach_funding(df, funding)
+        run_fn = None
+        if "legs" in spec:
+            symbol = "".join(k.replace("USDT", "") for k in spec["legs"])  # 例如 ETHBTC
+            parts, funding = [], {}
+            for sym in spec["legs"]:
+                d, funding[sym] = load_insample(sym, tf)
+                parts.append(d.add_prefix(f"{sym}_"))
+            if not all(p.index.equals(parts[0].index) for p in parts):
+                raise ValueError("各腳時間索引不一致")
+            df = pd.concat(parts, axis=1)
+            run_fn = functools.partial(engine.run_spread, legs=spec["legs"])
+        else:
+            symbol = spec.get("symbol", a.symbol)
+            df, funding = load_insample(symbol, tf)
+            df = attach_funding(df, funding)
         for other in spec.get("attach", []):
             odf, _ = load_insample(other, tf)
             if not odf.index.equals(df.index):
                 raise ValueError(f"{other} 與 {symbol} 時間索引不一致")
             df[f"{other}_close"] = odf["close"]
-        res = research.grid_search(fn, grid, df, fee, slip, funding)
+        res = research.grid_search(fn, grid, df, fee, slip, funding, run_fn=run_fn)
         out_csv = ROOT / "reports" / "stage1" / f"{name}_{symbol}{sfx}.csv"
         out_csv.parent.mkdir(parents=True, exist_ok=True)
         res.to_csv(out_csv, index=False)

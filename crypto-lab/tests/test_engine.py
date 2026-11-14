@@ -148,3 +148,52 @@ def test_resample_4h_and_bars_helper():
     assert bars(df, 720) == 720 and bars(df4, 720) == 180 and bars(df4, 3) == 1
     # 不完整的週期丟棄
     assert len(resample(df.iloc[1:], "4h")) == 11
+
+
+# ---------- 價差引擎
+
+def _pair_df(n=300, seed=0, same=False):
+    a = make_df(n, seed)
+    b = a.copy() if same else make_df(n, seed + 1)
+    df = pd.concat([a.add_prefix("AAA_"), b.add_prefix("BBB_")], axis=1)
+    return df
+
+
+def test_spread_identical_legs_only_costs():
+    """兩腳價格完全相同時，價差部位毛利為 0，只剩成本。"""
+    df = _pair_df(same=True)
+    sig = lambda d: pd.Series(np.where(np.arange(len(d)) % 50 < 25, 1, -1), index=d.index)
+    f = {"AAA": pd.Series(0.0, index=df.index[::8]), "BBB": pd.Series(0.0, index=df.index[::8])}
+    r = engine.run_spread(sig, {}, df, 0.001, 0.0, f, legs={"AAA": 1, "BBB": -1},
+                          check_lookahead_bias=False, keep_detail=True)
+    assert r["detail"]["gross"].abs().max() < 1e-12
+    # 部位變動次數含首次進場（0→1，每腳 1 單位）；其餘為翻倉（每腳 2 單位）
+    changes = int((np.diff(r["detail"]["pos"].to_numpy()) != 0).sum())
+    expected = 2 * 1 * 0.001 + (changes - 1) * 2 * 2 * 0.001
+    assert r["total_cost"] == pytest.approx(expected)
+
+
+def test_spread_matches_single_leg_sum():
+    """價差結果的逐根淨報酬 = 兩腳分別用 run() 計算的淨報酬相加。"""
+    df = _pair_df()
+    a = df.filter(like="AAA_").rename(columns=lambda c: c[4:])
+    b = df.filter(like="BBB_").rename(columns=lambda c: c[4:])
+    fa, fb = pd.Series(0.0002, index=df.index[::8]), pd.Series(-0.0001, index=df.index[::8])
+    sig = lambda d: pd.Series(np.sign(np.sin(np.arange(len(d)) / 7)).astype(int), index=d.index)
+    r = engine.run_spread(sig, {}, df, 0.0005, 0.0002, {"AAA": fa, "BBB": fb},
+                          legs={"AAA": 1, "BBB": -1}, check_lookahead_bias=False)
+    ra = engine.run(sig, {}, a, 0.0005, 0.0002, fa, check_lookahead_bias=False)
+    rb = engine.run(lambda d: -sig(d), {}, b, 0.0005, 0.0002, fb, check_lookahead_bias=False)
+    assert np.allclose(r["returns"].to_numpy(), ra["returns"].to_numpy() + rb["returns"].to_numpy())
+
+
+def test_spread_requires_funding_and_detects_lookahead():
+    df = _pair_df()
+    f = {"AAA": pd.Series(0.0, index=df.index[::8])}
+    with pytest.raises(ValueError):
+        engine.run_spread(lambda d: pd.Series(0, index=d.index), {}, df, 0.0, 0.0, f,
+                          legs={"AAA": 1, "BBB": -1})
+    f["BBB"] = f["AAA"]
+    cheat2 = lambda d: pd.Series(np.sign(d["AAA_close"].shift(-1) - d["AAA_close"]).fillna(0).astype(int), index=d.index)
+    with pytest.raises(engine.LookaheadError):
+        engine.run_spread(cheat2, {}, df, 0.0, 0.0, f, legs={"AAA": 1, "BBB": -1})
