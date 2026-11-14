@@ -1,0 +1,5 @@
+{
+  "_說明": "單邊比例。例如 Binance USDT 永續 taker 0.05% 填 0.0005。留 null 時引擎會拒絕執行。",
+  "fee": null,
+  "slippage": null
+}
