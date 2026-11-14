@@ -31,6 +31,14 @@ IDEAS = {
         "grid": {"k": [3.0, 3.5, 4.0, 5.0, 6.0], "hold": [3, 6, 12, 24, 48]},
         "rationale": "清算瀑布後反彈：強平造成的非資訊性賣壓被推過頭",
     },
+    "taker_imbalance": {
+        "grid": {"threshold": [1.5, 2.0, 2.5, 3.0, 3.5], "hold": [1, 3, 6, 12, 24]},
+        "rationale": "主動買賣失衡延續：急迫的吃單方帶有資訊，被動掛單方被吃",
+    },
+    "weekend_drift_revert": {
+        "grid": {"threshold": [0.01, 0.02, 0.03, 0.05, 0.08], "hold": [6, 12, 24, 48, 72]},
+        "rationale": "週末波動回歸：週末流動性差被推動的價格，週一流動性回來後修正",
+    },
 }
 
 GATE = {"min_sharpe": 1.0, "min_pf": 1.2, "min_trades": 100, "too_good_sharpe": 4.0, "too_good_dd": -0.03}
@@ -46,7 +54,7 @@ def judge(best: pd.Series | None, plateau: dict) -> tuple[str, str]:
         fails.append(f"Sharpe {best['sharpe']:.2f} < {GATE['min_sharpe']}")
     if best["profit_factor"] < GATE["min_pf"]:
         fails.append(f"PF {best['profit_factor']:.2f} < {GATE['min_pf']}")
-    if plateau["is_spike"]:
+    if plateau["is_spike"] and plateau["best"] > 0:  # 最優值 ≤ 0 時高原比沒有意義
         fails.append(f"參數尖峰：鄰近中位數 / 最優 = {plateau['ratio']:.2f} < {plateau['threshold']}")
     if fails:
         return "dead", "；".join(fails)
