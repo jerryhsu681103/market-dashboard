@@ -39,6 +39,14 @@ IDEAS = {
         "grid": {"threshold": [0.01, 0.02, 0.03, 0.05, 0.08], "hold": [6, 12, 24, 48, 72]},
         "rationale": "週末波動回歸：週末流動性差被推動的價格，週一流動性回來後修正",
     },
+    "session_seasonality": {
+        "grid": {"start": list(range(0, 24, 2)), "length": [2, 4, 6, 8, 12]},
+        "rationale": "時段季節性：時段間資金流的結構性差異造成固定時段漂移（只做多）",
+    },
+    "volume_climax": {
+        "grid": {"lookback": [72, 168, 336, 720], "k": [1.5, 2.0, 2.5, 3.0, 4.0]},
+        "rationale": "量能高潮反轉：累積偏離加量能創新高，追價資金集中出清後回落",
+    },
 }
 
 GATE = {"min_sharpe": 1.0, "min_pf": 1.2, "min_trades": 100, "too_good_sharpe": 4.0, "too_good_dd": -0.03}
