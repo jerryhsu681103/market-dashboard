@@ -1,0 +1,30 @@
+{
+  "idea": "whale_retail_divergence",
+  "symbol": "BTCUSDT",
+  "timeframe": "4h",
+  "dry_run": false,
+  "test_start": "2024-01-01 00:00:00+00:00",
+  "test_end": "2026-10-31 20:00:00+00:00",
+  "n_windows": 35,
+  "train_bars": 8766,
+  "test_bars": 180,
+  "sharpe": 0.2459,
+  "profit_factor": 1.0966,
+  "total_return": 0.0708,
+  "cagr": 0.0244,
+  "max_drawdown": -0.5642,
+  "trade_count": 203,
+  "win_rate": 0.3695,
+  "exposure": 0.547,
+  "total_cost": 0.2835,
+  "total_funding": 0.0082,
+  "insample_sharpe": 1.5352,
+  "status": "dead_stage3",
+  "fails": [
+    "前推 Sharpe 0.25 < 0.5",
+    "PF 1.10 < 1.1",
+    "前推 Sharpe 0.25 < 樣本內 1.54 × 50%"
+  ],
+  "param_changes": 8,
+  "command": "python -m scripts.stage3 whale_retail_divergence --timeframe 4h"
+}

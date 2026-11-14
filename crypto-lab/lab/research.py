@@ -144,9 +144,15 @@ def walk_forward(signal_fn, grid: dict, df: pd.DataFrame, fee, slippage, funding
         else:
             pos = np.zeros(end - start)
         pos_parts.append(pos)
+        chosen = None
+        if params:
+            row = res
+            for k, v in params.items():
+                row = row[row[k] == v]
+            chosen = float(row[objective].iloc[0])
         windows.append({"train_start": str(train.index[0]), "test_start": str(df.index[start]),
                         "test_end": str(df.index[end - 1]), "params": params,
-                        f"train_{objective}": float(res[objective].max())})
+                        f"train_{objective}_chosen": chosen})
         start = end
 
     test = df.iloc[train_bars:]
@@ -157,7 +163,7 @@ def walk_forward(signal_fn, grid: dict, df: pd.DataFrame, fee, slippage, funding
     fund_end = engine.funding_at_bar_end(test.index, funding)
     detail = engine.simulate(pos, bar_ret[train_bars:], fund_end, cost_rate, test.index)
     out = engine.summarize(detail, engine.infer_bars_per_year(df.index))
-    out.update({"windows": windows, "fee": float(fee), "slippage": float(slippage)})
+    out.update({"windows": windows, "fee": float(fee), "slippage": float(slippage), "detail": detail})
     return out
 
 
