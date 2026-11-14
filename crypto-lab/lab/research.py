@@ -163,12 +163,20 @@ def walk_forward(signal_fn, grid: dict, df: pd.DataFrame, fee, slippage, funding
 
 # ---------------------------------------------------------------- 置換檢驗
 
+def _score(res: pd.DataFrame, objective: str, min_trades: int) -> float:
+    """與第 1 關相同的選擇規則：交易次數 ≥ min_trades 的組合中目標值最高者；沒有合格組合則為 -inf。"""
+    ok = res[res["trade_count"] >= min_trades][objective]
+    ok = ok[np.isfinite(ok)]
+    return float(ok.max()) if len(ok) else float("-inf")
+
+
 def _perm_worker(args):
-    kind, signal_fn, grid, df, fee, slippage, funding, seed, start_index, objective, valid, wf_kw = args
-    pdf = permute_bars(df, seed=seed, start_index=start_index)
+    (kind, signal_fn, grid, df, fee, slippage, funding, seed, start_index, objective, valid, wf_kw,
+     min_trades, fixed_cols, run_fn) = args
+    pdf = permute_bars(df, seed=seed, start_index=start_index, fixed_cols=fixed_cols)
     if kind == "insample":
-        res = grid_search(signal_fn, grid, pdf, fee, slippage, funding, valid=valid)
-        return float(res[objective].max())
+        res = grid_search(signal_fn, grid, pdf, fee, slippage, funding, valid=valid, run_fn=run_fn)
+        return _score(res, objective, min_trades)
     return float(walk_forward(signal_fn, grid, pdf, fee, slippage, funding,
                               objective=objective, valid=valid, **wf_kw)[objective])
 
@@ -176,16 +184,21 @@ def _perm_worker(args):
 def permutation_test(signal_fn, grid: dict, df: pd.DataFrame, fee, slippage, funding, *,
                      kind: str = "insample", n_perm: int = 1000, seed: int = 20260101,
                      objective: str = "sharpe", valid=None, wf_kw: dict | None = None,
-                     workers: int | None = None) -> dict:
+                     workers: int | None = None, min_trades: int = 1, fixed_cols=(),
+                     run_fn=None) -> dict:
     """第 2 關（kind='insample'）或第 4 關（kind='walkforward'）置換檢驗。
 
     p = (假行情成績 ≥ 真實成績的次數 + 1) / (n_perm + 1)。
     +1 是標準的保守修正，避免 1000 次全輸時得到 p = 0。
     第 4 關只打亂第一個訓練窗口之後的資料（start_index = train_bars）。
+    min_trades：真實與假行情都用相同的選擇規則（交易次數 ≥ min_trades 的組合中取最高）。
+    fixed_cols：不隨 K 線打亂、固定在原時間上的外生特徵欄位（資金費率 funding_* 一律固定）。
     """
     wf_kw = wf_kw or {}
+    fixed_cols = tuple(fixed_cols)
     if kind == "insample":
-        real = float(grid_search(signal_fn, grid, df, fee, slippage, funding, valid=valid)[objective].max())
+        real_res = grid_search(signal_fn, grid, df, fee, slippage, funding, valid=valid, run_fn=run_fn)
+        real = _score(real_res, objective, min_trades)
         start_index = 0
     elif kind == "walkforward":
         real = float(walk_forward(signal_fn, grid, df, fee, slippage, funding,
@@ -195,15 +208,17 @@ def permutation_test(signal_fn, grid: dict, df: pd.DataFrame, fee, slippage, fun
         raise ValueError("kind 只能是 'insample' 或 'walkforward'")
 
     seeds = [seed + i for i in range(n_perm)]
-    jobs = [(kind, signal_fn, grid, df, fee, slippage, funding, s, start_index, objective, valid, wf_kw)
-            for s in seeds]
+    jobs = [(kind, signal_fn, grid, df, fee, slippage, funding, s, start_index, objective, valid, wf_kw,
+             min_trades, fixed_cols, run_fn) for s in seeds]
     workers = workers or max(1, (os.cpu_count() or 2) - 1)
     with ProcessPoolExecutor(max_workers=workers) as ex:
         perm = np.array(list(ex.map(_perm_worker, jobs, chunksize=4)), float)
     perm = np.where(np.isfinite(perm), perm, -np.inf)
     k = int((perm >= real).sum())
     return {"real": real, "perm_scores": perm, "n_perm": n_perm, "n_ge_real": k,
-            "p_value": (k + 1) / (n_perm + 1), "seed": seed, "kind": kind, "objective": objective}
+            "p_value": (k + 1) / (n_perm + 1), "seed": seed, "kind": kind, "objective": objective,
+            "min_trades": min_trades, "fixed_cols": list(fixed_cols),
+            "n_perm_no_eligible": int(np.isneginf(perm).sum())}
 
 
 def save_permutation_plot(result: dict, path: str | Path, title: str = "") -> Path:

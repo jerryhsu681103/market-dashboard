@@ -197,3 +197,13 @@ def test_spread_requires_funding_and_detects_lookahead():
     cheat2 = lambda d: pd.Series(np.sign(d["AAA_close"].shift(-1) - d["AAA_close"]).fillna(0).astype(int), index=d.index)
     with pytest.raises(engine.LookaheadError):
         engine.run_spread(cheat2, {}, df, 0.0, 0.0, f, legs={"AAA": 1, "BBB": -1})
+
+
+def test_permutation_fixed_cols_stay_in_place():
+    df = make_df(500)
+    df["feat"] = np.arange(500, dtype=float)
+    df["funding_rate"] = np.arange(500, dtype=float)
+    p = permute_bars(df, seed=7, fixed_cols=["feat"])
+    assert p["feat"].equals(df["feat"])
+    assert p["funding_rate"].equals(df["funding_rate"])
+    assert not p["volume"].equals(df["volume"])  # 一般 K 線屬性仍跟著打亂

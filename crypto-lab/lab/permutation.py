@@ -27,7 +27,8 @@ def _perm_indices(n_bars: int, start_index: int, seed: int) -> tuple[np.ndarray,
     return rng.permutation(k), rng.permutation(k)
 
 
-def _apply(df: pd.DataFrame, start_index: int, p_shape: np.ndarray, p_gap: np.ndarray) -> pd.DataFrame:
+def _apply(df: pd.DataFrame, start_index: int, p_shape: np.ndarray, p_gap: np.ndarray,
+           fixed_cols=()) -> pd.DataFrame:
     lo, lh, ll, lc = (np.log(df[c].to_numpy(float)) for c in PRICE)
     s = start_index
     gap = lo[s + 1:] - lc[s:-1]
@@ -43,16 +44,17 @@ def _apply(df: pd.DataFrame, start_index: int, p_shape: np.ndarray, p_gap: np.nd
     out.iloc[s + 1:, out.columns.get_loc("low")] = np.exp(new_lo + l_rel)
     out.iloc[s + 1:, out.columns.get_loc("close")] = np.exp(new_lc)
     # 成交量等 K 線屬性跟著形狀移動；funding_* 欄位留在原本的時間上，不打亂
-    others = [c for c in df.columns if c not in PRICE and not c.startswith("funding")]
+    # fixed_cols：外生特徵（例如多空比）固定在原本的時間上，只打亂價格
+    others = [c for c in df.columns if c not in PRICE and not c.startswith("funding") and c not in fixed_cols]
     for c in others:
         col = out.columns.get_loc(c)
         out.iloc[s + 1:, col] = df[c].to_numpy()[s + 1:][p_shape]
     return out
 
 
-def permute_bars(df: pd.DataFrame, seed: int, start_index: int = 0) -> pd.DataFrame:
+def permute_bars(df: pd.DataFrame, seed: int, start_index: int = 0, fixed_cols=()) -> pd.DataFrame:
     p_shape, p_gap = _perm_indices(len(df), start_index, seed)
-    return _apply(df, start_index, p_shape, p_gap)
+    return _apply(df, start_index, p_shape, p_gap, tuple(fixed_cols))
 
 
 def permute_many(dfs: dict[str, pd.DataFrame], seed: int, start_index: int = 0) -> dict[str, pd.DataFrame]:

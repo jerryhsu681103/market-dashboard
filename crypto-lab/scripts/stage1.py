@@ -156,6 +156,36 @@ def judge(best: pd.Series | None, plateau: dict) -> tuple[str, str]:
     return "pass", ""
 
 
+def load_idea_data(spec: dict, tf: str, default_symbol: str = "BTCUSDT"):
+    """依點子設定載入樣本內資料（第 1、2 關共用，確保兩關資料完全相同）。
+
+    回傳 (df, funding, symbol, run_fn)。
+    """
+    run_fn = None
+    if "legs" in spec:
+        symbol = "".join(k.replace("USDT", "") for k in spec["legs"])  # 例如 ETHBTC
+        parts, funding = [], {}
+        for sym in spec["legs"]:
+            d, funding[sym] = load_insample(sym, tf)
+            parts.append(d.add_prefix(f"{sym}_"))
+        if not all(p.index.equals(parts[0].index) for p in parts):
+            raise ValueError("各腳時間索引不一致")
+        df = pd.concat(parts, axis=1)
+        run_fn = functools.partial(engine.run_spread, legs=spec["legs"])
+    else:
+        symbol = spec.get("symbol", default_symbol)
+        df, funding = load_insample(symbol, tf)
+        df = attach_funding(df, funding)
+        if spec.get("features"):
+            df = attach_features(df, symbol, spec["features"], tf)
+    for other in spec.get("attach", []):
+        odf, _ = load_insample(other, tf)
+        if not odf.index.equals(df.index):
+            raise ValueError(f"{other} 與 {symbol} 時間索引不一致")
+        df[f"{other}_close"] = odf["close"]
+    return df, funding, symbol, run_fn
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("ideas", nargs="+")
@@ -173,28 +203,7 @@ def main():
         grid = grid_for(spec, a.timeframe)
         tf = a.timeframe
         sfx = "" if tf == "1h" else f"_{tf}"
-        run_fn = None
-        if "legs" in spec:
-            symbol = "".join(k.replace("USDT", "") for k in spec["legs"])  # 例如 ETHBTC
-            parts, funding = [], {}
-            for sym in spec["legs"]:
-                d, funding[sym] = load_insample(sym, tf)
-                parts.append(d.add_prefix(f"{sym}_"))
-            if not all(p.index.equals(parts[0].index) for p in parts):
-                raise ValueError("各腳時間索引不一致")
-            df = pd.concat(parts, axis=1)
-            run_fn = functools.partial(engine.run_spread, legs=spec["legs"])
-        else:
-            symbol = spec.get("symbol", a.symbol)
-            df, funding = load_insample(symbol, tf)
-            df = attach_funding(df, funding)
-            if spec.get("features"):
-                df = attach_features(df, symbol, spec["features"], tf)
-        for other in spec.get("attach", []):
-            odf, _ = load_insample(other, tf)
-            if not odf.index.equals(df.index):
-                raise ValueError(f"{other} 與 {symbol} 時間索引不一致")
-            df[f"{other}_close"] = odf["close"]
+        df, funding, symbol, run_fn = load_idea_data(spec, tf, a.symbol)
         res = research.grid_search(fn, grid, df, fee, slip, funding, run_fn=run_fn)
         out_csv = ROOT / "reports" / "stage1" / f"{name}_{symbol}{sfx}.csv"
         out_csv.parent.mkdir(parents=True, exist_ok=True)

@@ -1,0 +1,26 @@
+{
+  "idea": "whale_retail_divergence",
+  "symbol": "BTCUSDT",
+  "timeframe": "4h",
+  "real_sharpe": 1.5352,
+  "p_value": 0.002,
+  "n_perm": 1000,
+  "n_ge_real": 1,
+  "perm_no_eligible_combo": 0,
+  "seed": 20261114,
+  "perm_sharpe_mean": 0.1665,
+  "perm_sharpe_p95": 0.9234,
+  "perm_sharpe_p99": 1.1451,
+  "perm_sharpe_max": 1.6726,
+  "fixed_cols": [
+    "oi",
+    "oi_value",
+    "top_ls_account",
+    "top_ls_position",
+    "global_ls_account",
+    "taker_ls_vol"
+  ],
+  "min_trades": 100,
+  "status": "alive_stage2",
+  "command": "python -m scripts.stage2 whale_retail_divergence --timeframe 4h --n-perm 1000 --seed 20261114"
+}
