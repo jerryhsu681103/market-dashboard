@@ -128,6 +128,22 @@ IDEAS = {
         "grid": {"k": [0.5, 1.0, 1.5, 2.0, 2.5], "hold": [3, 6, 12, 18, 30]},
         "rationale": "平倉驅動行情的反向：未平倉量下降的行情由平倉推動，推力耗盡後回吐",
     },
+    # ---- 第六批：每晚研究 2026-11-14（只用永續 K 線）
+    "false_breakout_fade": {
+        "native_tf": "4h",
+        "grid": {"channel": [6, 12, 18, 30, 42], "hold": [1, 2, 3, 6, 12]},
+        "rationale": "假突破反轉：刺穿區間高低點後收回，追突破者與被掃停損者反向了結",
+    },
+    "avg_trade_size_flow": {
+        "native_tf": "4h",
+        "grid": {"threshold": [0.5, 1.0, 1.5, 2.0, 2.5], "hold": [1, 3, 6, 12, 18]},
+        "rationale": "大單資金流：平均單筆成交額異常偏高時，順著大額參與者主導的 K 線方向",
+    },
+    "absorption_break": {
+        "native_tf": "4h",
+        "grid": {"vol_mult": [1.2, 1.5, 2.0, 2.5, 3.0], "hold": [3, 6, 12, 18, 30]},
+        "rationale": "吸收後突破：高量窄幅代表掛單吸收，價格離開該 K 線高低點後被動方追價",
+    },
 }
 
 def grid_for(spec: dict, timeframe: str) -> dict:
