@@ -1,0 +1,13 @@
+{
+  "_說明": "隔夜研究組紙面帳的唯一配置。換策略、換參數只改這一份。這裡沒有、也不允許出現任何金鑰或下單設定。",
+  "paper_start_utc": "2026-11-15T00:00:00Z",
+  "timeframe": "4h",
+  "capital_usdt": 10000,
+  "max_loss_per_trade_pct": 0.01,
+  "watch": {"daily_drawdown_halt": -0.03, "consecutive_losses_halt": 3, "stale_hours_halt": 40},
+  "strategies": [
+    {"role": "主候選", "name": "donchian_atr", "params": {"entry_h": 960, "stop_k": 4.0}},
+    {"role": "備選一", "name": "near_high_momo", "params": {"look_h": 1440, "prox": 0.03}}
+  ],
+  "vacant": ["備選二：從缺（今晚只有兩條過關）"]
+}

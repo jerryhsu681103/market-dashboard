@@ -1,0 +1,345 @@
+{
+ "name": "btc_breakout_alt",
+ "timeframe": "4h",
+ "family": "BTC 先動",
+ "regime": "走趨勢（只做多）",
+ "why": "BTC 創 10–40 天新高後做多山寨：資金先進 BTC、再外溢到山寨（多日級別的時差）",
+ "payer": "BTC 突破後還在放空山寨的人",
+ "overlap": "",
+ "universe": "alts",
+ "grid": {
+  "entry_h": [
+   240,
+   480,
+   960
+  ],
+  "stop_k": [
+   2.0,
+   3.0,
+   4.0
+  ]
+ },
+ "fee": 0.0005,
+ "slippage": 0.0002,
+ "symbols": 11,
+ "grid_table": [
+  {
+   "entry_h": 240,
+   "stop_k": 2.0,
+   "sharpe": 0.022434817922552797,
+   "total_return": -0.0884807647111836,
+   "max_drawdown": -0.4294429856105738,
+   "trade_count": 995
+  },
+  {
+   "entry_h": 240,
+   "stop_k": 3.0,
+   "sharpe": 0.27766879201932587,
+   "total_return": 0.16552630786387756,
+   "max_drawdown": -0.39496495369396667,
+   "trade_count": 814
+  },
+  {
+   "entry_h": 240,
+   "stop_k": 4.0,
+   "sharpe": 0.46255224602817463,
+   "total_return": 0.46271939953678887,
+   "max_drawdown": -0.3914961423345933,
+   "trade_count": 680
+  },
+  {
+   "entry_h": 480,
+   "stop_k": 2.0,
+   "sharpe": 0.24437012179761997,
+   "total_return": 0.12469609687941285,
+   "max_drawdown": -0.37024816191067533,
+   "trade_count": 745
+  },
+  {
+   "entry_h": 480,
+   "stop_k": 3.0,
+   "sharpe": 0.503343371225043,
+   "total_return": 0.4746929318011506,
+   "max_drawdown": -0.3319177272182171,
+   "trade_count": 601
+  },
+  {
+   "entry_h": 480,
+   "stop_k": 4.0,
+   "sharpe": 0.7798913007736092,
+   "total_return": 1.0974068801346042,
+   "max_drawdown": -0.26777296108252524,
+   "trade_count": 477
+  },
+  {
+   "entry_h": 960,
+   "stop_k": 2.0,
+   "sharpe": 0.38570063900147505,
+   "total_return": 0.2515653051587934,
+   "max_drawdown": -0.3603724420170712,
+   "trade_count": 523
+  },
+  {
+   "entry_h": 960,
+   "stop_k": 3.0,
+   "sharpe": 0.5309032075162076,
+   "total_return": 0.4734495388149029,
+   "max_drawdown": -0.29281869132981075,
+   "trade_count": 441
+  },
+  {
+   "entry_h": 960,
+   "stop_k": 4.0,
+   "sharpe": 0.6987785228517035,
+   "total_return": 0.8165632338386817,
+   "max_drawdown": -0.3062184290499479,
+   "trade_count": 359
+  }
+ ],
+ "breadth_positive": 1.0,
+ "full_best": {
+  "params": {
+   "entry_h": 480,
+   "stop_k": 4.0
+  },
+  "sharpe": 0.7798913007736092,
+  "total_return": 1.0974068801346042,
+  "cagr": 0.203277032277003,
+  "max_drawdown": -0.26777296108252524,
+  "trades": 477,
+  "profit_factor": 1.613310345836513,
+  "win_rate": 0.4549266247379455,
+  "longest_losing_streak": 12,
+  "worst_month": -0.1351405113255777,
+  "worst_month_label": "2025-01",
+  "exposure": 0.2553564391346732,
+  "cost_paid": 0.060709090909090914,
+  "funding_pnl": -0.09793483818181818,
+  "start": "2022-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "plateau": {
+  "ratio": 0.6454019563056468,
+  "is_spike": false,
+  "neighbor_median": 0.503343371225043
+ },
+ "hold_full": {
+  "sharpe": 0.34979182168851747,
+  "total_return": 0.10278290889043884,
+  "cagr": 0.024743650362586633,
+  "max_drawdown": -0.7055814510575803,
+  "trades": 11,
+  "profit_factor": 7.667110394895137,
+  "win_rate": 0.8181818181818182,
+  "longest_losing_streak": 1,
+  "worst_month": -0.2912839070092583,
+  "worst_month_label": "2024-04",
+  "exposure": 0.9505527554808869,
+  "cost_paid": 0.0,
+  "funding_pnl": -0.1981420763636364,
+  "start": "2022-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "wf": {
+  "sharpe": 0.4003778776576875,
+  "total_return": 0.13360908281425132,
+  "cagr": 0.06471079773535271,
+  "max_drawdown": -0.31291798820550387,
+  "trades": 208,
+  "profit_factor": 1.2552652752306732,
+  "win_rate": 0.3942307692307692,
+  "longest_losing_streak": 46,
+  "worst_month": -0.1351405113255777,
+  "worst_month_label": "2025-01",
+  "exposure": 0.10547945205479453,
+  "cost_paid": 0.026472727272727273,
+  "funding_pnl": -0.02099783181818182,
+  "start": "2024-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "wf_cost_x2": {
+  "sharpe": 0.3383987690359035,
+  "total_return": 0.10395940168149398,
+  "cagr": 0.05069472335283676,
+  "max_drawdown": -0.32576335659033495,
+  "trades": 208,
+  "profit_factor": 1.2107701225506378,
+  "win_rate": 0.3894230769230769,
+  "longest_losing_streak": 46,
+  "worst_month": -0.13667808801837789,
+  "worst_month_label": "2025-01",
+  "exposure": 0.10547945205479453,
+  "cost_paid": 0.052945454545454546,
+  "funding_pnl": -0.02099783181818182,
+  "start": "2024-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "wf_windows": [
+  {
+   "test_start": "2024-11-15 00:00:00+00:00",
+   "test_end": "2025-02-14 00:00:00+00:00",
+   "params": {
+    "entry_h": 480,
+    "stop_k": 4.0
+   },
+   "train_sharpe": 0.8819397174508513
+  },
+  {
+   "test_start": "2025-02-14 00:00:00+00:00",
+   "test_end": "2025-05-16 00:00:00+00:00",
+   "params": {
+    "entry_h": 960,
+    "stop_k": 4.0
+   },
+   "train_sharpe": 0.8989331626607289
+  },
+  {
+   "test_start": "2025-05-16 00:00:00+00:00",
+   "test_end": "2025-08-15 00:00:00+00:00",
+   "params": {
+    "entry_h": 960,
+    "stop_k": 2.0
+   },
+   "train_sharpe": 1.303872629733273
+  },
+  {
+   "test_start": "2025-08-15 00:00:00+00:00",
+   "test_end": "2025-11-14 00:00:00+00:00",
+   "params": {
+    "entry_h": 960,
+    "stop_k": 2.0
+   },
+   "train_sharpe": 1.4517740803012025
+  },
+  {
+   "test_start": "2025-11-14 00:00:00+00:00",
+   "test_end": "2026-02-13 00:00:00+00:00",
+   "params": {
+    "entry_h": 960,
+    "stop_k": 2.0
+   },
+   "train_sharpe": 1.2389187642935136
+  },
+  {
+   "test_start": "2026-02-13 00:00:00+00:00",
+   "test_end": "2026-05-15 00:00:00+00:00",
+   "params": {
+    "entry_h": 960,
+    "stop_k": 2.0
+   },
+   "train_sharpe": 0.9815369110251085
+  },
+  {
+   "test_start": "2026-05-15 00:00:00+00:00",
+   "test_end": "2026-08-14 00:00:00+00:00",
+   "params": {
+    "entry_h": 960,
+    "stop_k": 2.0
+   },
+   "train_sharpe": 0.757740823904325
+  },
+  {
+   "test_start": "2026-08-14 00:00:00+00:00",
+   "test_end": "2026-11-13 00:00:00+00:00",
+   "params": {
+    "entry_h": 960,
+    "stop_k": 2.0
+   },
+   "train_sharpe": 0.9108634787634305
+  },
+  {
+   "test_start": "2026-11-13 00:00:00+00:00",
+   "test_end": "2026-11-15 00:00:00+00:00",
+   "params": {
+    "entry_h": 960,
+    "stop_k": 4.0
+   },
+   "train_sharpe": 0.6811748286067776
+  }
+ ],
+ "hold_wf": {
+  "sharpe": -0.22505703617681957,
+  "total_return": -0.490218579758365,
+  "cagr": -0.28601020998782134,
+  "max_drawdown": -0.7055814510575809,
+  "trades": 10,
+  "profit_factor": 0.2894194763215719,
+  "win_rate": 0.3,
+  "longest_losing_streak": 6,
+  "worst_month": -0.2621991147851457,
+  "worst_month_label": "2025-02",
+  "exposure": 0.9090909090909091,
+  "cost_paid": 0.0,
+  "funding_pnl": -0.05405162636363637,
+  "start": "2024-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "frozen_params": {
+  "entry_h": 960,
+  "stop_k": 4.0
+ },
+ "frozen_full": {
+  "sharpe": 0.6987785228517035,
+  "total_return": 0.8165632338386817,
+  "cagr": 0.16082905083512022,
+  "max_drawdown": -0.3062184290499479,
+  "trades": 359,
+  "profit_factor": 1.6182879386438576,
+  "win_rate": 0.45125348189415043,
+  "longest_losing_streak": 28,
+  "worst_month": -0.12692375243907483,
+  "worst_month_label": "2024-01",
+  "exposure": 0.19767490096032192,
+  "cost_paid": 0.04569090909090909,
+  "funding_pnl": -0.08844712727272727,
+  "start": "2022-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "regime_wf": {
+  "bull": {
+   "ann_return": 0.7557908203202638,
+   "share": 0.29315068493150687
+  },
+  "bear": {
+   "ann_return": -0.0890411034958783,
+   "share": 0.29863013698630136
+  },
+  "range": {
+   "ann_return": -0.26780173067934315,
+   "share": 0.40821917808219177
+  }
+ },
+ "regime_frozen_4y": {
+  "bull": {
+   "ann_return": 0.8045124487601192,
+   "share": 0.38774811772758383
+  },
+  "bear": {
+   "ann_return": -0.08987101204544688,
+   "share": 0.21560574948665298
+  },
+  "range": {
+   "ann_return": -0.27356178048236146,
+   "share": 0.39664613278576316
+  }
+ },
+ "scores": {
+  "walk_forward": 2,
+  "max_drawdown": 2,
+  "trade_count": 4,
+  "losing_streak": 1,
+  "bear_and_range": 1
+ },
+ "score_total": 10,
+ "gates": {
+  "G1": true,
+  "G2": true,
+  "G3": false,
+  "G4": true,
+  "G5": true,
+  "G6": false
+ },
+ "status": "dead",
+ "gate": "G3",
+ "death": "walk-forward Sharpe 0.40、報酬 13.4%、交易 208 筆"
+}

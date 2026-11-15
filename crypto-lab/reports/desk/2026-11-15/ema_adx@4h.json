@@ -1,0 +1,345 @@
+{
+ "name": "ema_adx",
+ "timeframe": "4h",
+ "family": "趨勢",
+ "regime": "走趨勢",
+ "why": "均線多空排列且 ADX 顯示有趨勢才持倉：把震盪期濾掉",
+ "payer": "震盪期被均線來回打臉的人不是我們，是趨勢期的逆勢者",
+ "overlap": "",
+ "universe": "all",
+ "grid": {
+  "slow_h": [
+   200,
+   400,
+   800
+  ],
+  "adx_th": [
+   15,
+   20,
+   25
+  ]
+ },
+ "fee": 0.0005,
+ "slippage": 0.0002,
+ "symbols": 12,
+ "grid_table": [
+  {
+   "slow_h": 200,
+   "adx_th": 15,
+   "sharpe": 0.21187935819346115,
+   "total_return": -0.04575668484709028,
+   "max_drawdown": -0.6829939422490607,
+   "trade_count": 3088
+  },
+  {
+   "slow_h": 200,
+   "adx_th": 20,
+   "sharpe": 0.452381120266747,
+   "total_return": 0.506877343479915,
+   "max_drawdown": -0.5902276748099615,
+   "trade_count": 2778
+  },
+  {
+   "slow_h": 200,
+   "adx_th": 25,
+   "sharpe": 0.4150140779203839,
+   "total_return": 0.4099983898800892,
+   "max_drawdown": -0.468113243169597,
+   "trade_count": 2119
+  },
+  {
+   "slow_h": 400,
+   "adx_th": 15,
+   "sharpe": 0.6355565451964145,
+   "total_return": 1.12307016889857,
+   "max_drawdown": -0.45759911255893104,
+   "trade_count": 2173
+  },
+  {
+   "slow_h": 400,
+   "adx_th": 20,
+   "sharpe": 0.8348586516327403,
+   "total_return": 1.8826637943008708,
+   "max_drawdown": -0.3703612982036988,
+   "trade_count": 2458
+  },
+  {
+   "slow_h": 400,
+   "adx_th": 25,
+   "sharpe": 0.5125956736348523,
+   "total_return": 0.6287110834916649,
+   "max_drawdown": -0.4166095703905953,
+   "trade_count": 2170
+  },
+  {
+   "slow_h": 800,
+   "adx_th": 15,
+   "sharpe": 0.6689674947449898,
+   "total_return": 1.23374112572345,
+   "max_drawdown": -0.41618800746545626,
+   "trade_count": 1677
+  },
+  {
+   "slow_h": 800,
+   "adx_th": 20,
+   "sharpe": 0.8115575716015333,
+   "total_return": 1.6807630403020006,
+   "max_drawdown": -0.3311164462610122,
+   "trade_count": 2177
+  },
+  {
+   "slow_h": 800,
+   "adx_th": 25,
+   "sharpe": 0.4703987363886136,
+   "total_return": 0.509701049223326,
+   "max_drawdown": -0.32397975964252357,
+   "trade_count": 2072
+  }
+ ],
+ "breadth_positive": 1.0,
+ "full_best": {
+  "params": {
+   "slow_h": 400,
+   "adx_th": 20
+  },
+  "sharpe": 0.8348586516327403,
+  "total_return": 1.8826637943008708,
+  "cagr": 0.30277621329676174,
+  "max_drawdown": -0.3703612982036988,
+  "trades": 2458,
+  "profit_factor": 1.3130905943178857,
+  "win_rate": 0.4267697314890155,
+  "longest_losing_streak": 22,
+  "worst_month": -0.20052574415694524,
+  "worst_month_label": "2025-01",
+  "exposure": 0.6600406875047532,
+  "cost_paid": 0.28536666666666666,
+  "funding_pnl": -0.0783513225,
+  "start": "2022-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "plateau": {
+  "ratio": 0.5887190652579423,
+  "is_spike": true,
+  "neighbor_median": 0.49149720501173294
+ },
+ "hold_full": {
+  "sharpe": 0.38394618245715767,
+  "total_return": 0.22258832490464275,
+  "cagr": 0.051489949792012935,
+  "max_drawdown": -0.6873085636700265,
+  "trades": 12,
+  "profit_factor": 8.718430304479652,
+  "win_rate": 0.8333333333333334,
+  "longest_losing_streak": 1,
+  "worst_month": -0.28032540862856614,
+  "worst_month_label": "2024-04",
+  "exposure": 0.9546733591908131,
+  "cost_paid": 0.0,
+  "funding_pnl": -0.20498397666666668,
+  "start": "2022-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "wf": {
+  "sharpe": 0.49598510870436924,
+  "total_return": 0.27694800649824436,
+  "cagr": 0.13002124161373363,
+  "max_drawdown": -0.3955478770221892,
+  "trades": 1054,
+  "profit_factor": 1.1997051142657211,
+  "win_rate": 0.4155597722960152,
+  "longest_losing_streak": 20,
+  "worst_month": -0.21036769053961624,
+  "worst_month_label": "2025-03",
+  "exposure": 0.6641362252663622,
+  "cost_paid": 0.122325,
+  "funding_pnl": -0.029463324166666666,
+  "start": "2024-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "wf_cost_x2": {
+  "sharpe": 0.36150683384293497,
+  "total_return": 0.12995147093897086,
+  "cagr": 0.06299175487816977,
+  "max_drawdown": -0.4372184438274287,
+  "trades": 1054,
+  "profit_factor": 1.1410325656408549,
+  "win_rate": 0.4089184060721063,
+  "longest_losing_streak": 20,
+  "worst_month": -0.21597508786437025,
+  "worst_month_label": "2025-03",
+  "exposure": 0.6641362252663622,
+  "cost_paid": 0.24465,
+  "funding_pnl": -0.029463324166666666,
+  "start": "2024-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "wf_windows": [
+  {
+   "test_start": "2024-11-15 00:00:00+00:00",
+   "test_end": "2025-02-14 00:00:00+00:00",
+   "params": {
+    "slow_h": 200,
+    "adx_th": 20
+   },
+   "train_sharpe": 1.1023329170320106
+  },
+  {
+   "test_start": "2025-02-14 00:00:00+00:00",
+   "test_end": "2025-05-16 00:00:00+00:00",
+   "params": {
+    "slow_h": 200,
+    "adx_th": 20
+   },
+   "train_sharpe": 0.9082574961125277
+  },
+  {
+   "test_start": "2025-05-16 00:00:00+00:00",
+   "test_end": "2025-08-15 00:00:00+00:00",
+   "params": {
+    "slow_h": 800,
+    "adx_th": 20
+   },
+   "train_sharpe": 0.9933875308338832
+  },
+  {
+   "test_start": "2025-08-15 00:00:00+00:00",
+   "test_end": "2025-11-14 00:00:00+00:00",
+   "params": {
+    "slow_h": 800,
+    "adx_th": 20
+   },
+   "train_sharpe": 1.1321227989753737
+  },
+  {
+   "test_start": "2025-11-14 00:00:00+00:00",
+   "test_end": "2026-02-13 00:00:00+00:00",
+   "params": {
+    "slow_h": 800,
+    "adx_th": 20
+   },
+   "train_sharpe": 0.7538665070246761
+  },
+  {
+   "test_start": "2026-02-13 00:00:00+00:00",
+   "test_end": "2026-05-15 00:00:00+00:00",
+   "params": {
+    "slow_h": 800,
+    "adx_th": 15
+   },
+   "train_sharpe": 0.6782897913526258
+  },
+  {
+   "test_start": "2026-05-15 00:00:00+00:00",
+   "test_end": "2026-08-14 00:00:00+00:00",
+   "params": {
+    "slow_h": 800,
+    "adx_th": 20
+   },
+   "train_sharpe": 0.38370892421846836
+  },
+  {
+   "test_start": "2026-08-14 00:00:00+00:00",
+   "test_end": "2026-11-13 00:00:00+00:00",
+   "params": {
+    "slow_h": 800,
+    "adx_th": 15
+   },
+   "train_sharpe": 0.5402545695056715
+  },
+  {
+   "test_start": "2026-11-13 00:00:00+00:00",
+   "test_end": "2026-11-15 00:00:00+00:00",
+   "params": {
+    "slow_h": 800,
+    "adx_th": 15
+   },
+   "train_sharpe": 0.8643124223943457
+  }
+ ],
+ "hold_wf": {
+  "sharpe": -0.22718402780710553,
+  "total_return": -0.472184787715788,
+  "cagr": -0.273491079005762,
+  "max_drawdown": -0.6873085636700278,
+  "trades": 11,
+  "profit_factor": 0.27713811129540866,
+  "win_rate": 0.2727272727272727,
+  "longest_losing_streak": 6,
+  "worst_month": -0.25499953904326544,
+  "worst_month_label": "2025-02",
+  "exposure": 0.9166666666666666,
+  "cost_paid": 0.0,
+  "funding_pnl": -0.0575823075,
+  "start": "2024-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "frozen_params": {
+  "slow_h": 800,
+  "adx_th": 15
+ },
+ "frozen_full": {
+  "sharpe": 0.6689674947449898,
+  "total_return": 1.23374112572345,
+  "cagr": 0.22235818530317752,
+  "max_drawdown": -0.41618800746545626,
+  "trades": 1677,
+  "profit_factor": 1.2818480002260169,
+  "win_rate": 0.4263565891472868,
+  "longest_losing_streak": 24,
+  "worst_month": -0.1557520066270347,
+  "worst_month_label": "2024-05",
+  "exposure": 0.8472412350749107,
+  "cost_paid": 0.19424999999999998,
+  "funding_pnl": -0.11110392166666666,
+  "start": "2022-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "regime_wf": {
+  "bull": {
+   "ann_return": 1.0187541205673492,
+   "share": 0.29315068493150687
+  },
+  "bear": {
+   "ann_return": 0.33129079976355486,
+   "share": 0.29863013698630136
+  },
+  "range": {
+   "ann_return": -0.4214275700107405,
+   "share": 0.40821917808219177
+  }
+ },
+ "regime_frozen_4y": {
+  "bull": {
+   "ann_return": 0.9093778646029819,
+   "share": 0.38774811772758383
+  },
+  "bear": {
+   "ann_return": 0.6344419338861387,
+   "share": 0.21560574948665298
+  },
+  "range": {
+   "ann_return": -0.46628864548229815,
+   "share": 0.39664613278576316
+  }
+ },
+ "scores": {
+  "walk_forward": 2,
+  "max_drawdown": 2,
+  "trade_count": 5,
+  "losing_streak": 1,
+  "bear_and_range": 1
+ },
+ "score_total": 11,
+ "gates": {
+  "G1": true,
+  "G2": false,
+  "G3": false,
+  "G4": true,
+  "G5": true,
+  "G6": false
+ },
+ "status": "dead",
+ "gate": "G2",
+ "death": "參數面不穩：鄰居/最優 0.59，Sharpe>0 的組合佔 100%"
+}

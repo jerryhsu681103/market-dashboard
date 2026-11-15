@@ -47,3 +47,15 @@ cd crypto-lab
 | 第 2 關置換 1000 次（6 組參數） | 約 5–10 分鐘 |
 | 單次滾動前推（6 組參數） | 約 17 秒 |
 | 第 4 關前推置換 1000 次 | 約 1.5 小時（隨參數組數線性增加） |
+
+## 隔夜研究組（desk，2026-11-15 起）
+
+12 幣組合的夜間研究與紙面帳，獨立於上面的 4 關流程。只記帳、不下單。
+
+```bash
+python -m desk.evaluate && python -m desk.report   # 驗偽：回測、walk-forward、費用加倍、打分 → reports/desk/<日期>/
+python -m desk.robust <名稱@週期>                    # 存活者加驗
+bash desk/run_daily.sh                              # 更新行情 → 接著記紙面帳 → 值守（回傳 2＝已停記）
+```
+
+配置只有一份：`config/desk.json`。例行任務與已知限制：`prompts/09-night-desk.md`。

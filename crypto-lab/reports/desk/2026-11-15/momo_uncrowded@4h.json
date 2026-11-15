@@ -1,0 +1,345 @@
+{
+ "name": "momo_uncrowded",
+ "timeframe": "4h",
+ "family": "趨勢",
+ "regime": "走趨勢",
+ "why": "順勢，但資金費顯示同向已擁擠時不參與：避開趨勢末段的擠兌",
+ "payer": "趨勢末段高槓桿追進去的人",
+ "overlap": "",
+ "universe": "all",
+ "grid": {
+  "look_h": [
+   240,
+   480,
+   960
+  ],
+  "fund_cap": [
+   0.0002,
+   0.0003,
+   0.0005
+  ]
+ },
+ "fee": 0.0005,
+ "slippage": 0.0002,
+ "symbols": 12,
+ "grid_table": [
+  {
+   "look_h": 240,
+   "fund_cap": 0.0002,
+   "sharpe": 0.05059392801079431,
+   "total_return": -0.27115684277266294,
+   "max_drawdown": -0.6845235264144311,
+   "trade_count": 5967
+  },
+  {
+   "look_h": 240,
+   "fund_cap": 0.0003,
+   "sharpe": 0.09394869192567465,
+   "total_return": -0.22694718755969223,
+   "max_drawdown": -0.7005006988451336,
+   "trade_count": 5868
+  },
+  {
+   "look_h": 240,
+   "fund_cap": 0.0005,
+   "sharpe": 0.15333889411443907,
+   "total_return": -0.14545273791772018,
+   "max_drawdown": -0.7033526239532284,
+   "trade_count": 5831
+  },
+  {
+   "look_h": 480,
+   "fund_cap": 0.0002,
+   "sharpe": 0.38052116153653903,
+   "total_return": 0.3259213036591504,
+   "max_drawdown": -0.5526401394898324,
+   "trade_count": 4348
+  },
+  {
+   "look_h": 480,
+   "fund_cap": 0.0003,
+   "sharpe": 0.38847654442331797,
+   "total_return": 0.3389373810715024,
+   "max_drawdown": -0.5454944052215334,
+   "trade_count": 4198
+  },
+  {
+   "look_h": 480,
+   "fund_cap": 0.0005,
+   "sharpe": 0.4901925007418093,
+   "total_return": 0.6173425680897038,
+   "max_drawdown": -0.5365595722112855,
+   "trade_count": 4132
+  },
+  {
+   "look_h": 960,
+   "fund_cap": 0.0002,
+   "sharpe": 0.5082041416071151,
+   "total_return": 0.663455417313809,
+   "max_drawdown": -0.46448691933806663,
+   "trade_count": 3178
+  },
+  {
+   "look_h": 960,
+   "fund_cap": 0.0003,
+   "sharpe": 0.49740612293377784,
+   "total_return": 0.6364811073119503,
+   "max_drawdown": -0.4671029772404368,
+   "trade_count": 3011
+  },
+  {
+   "look_h": 960,
+   "fund_cap": 0.0005,
+   "sharpe": 0.5670814943691486,
+   "total_return": 0.8695729983869467,
+   "max_drawdown": -0.46775359982668197,
+   "trade_count": 2925
+  }
+ ],
+ "breadth_positive": 1.0,
+ "full_best": {
+  "params": {
+   "look_h": 960,
+   "fund_cap": 0.0005
+  },
+  "sharpe": 0.5670814943691486,
+  "total_return": 0.8695729983869467,
+  "cagr": 0.16920080951566385,
+  "max_drawdown": -0.46775359982668197,
+  "trades": 2925,
+  "profit_factor": 1.250882058871297,
+  "win_rate": 0.3217094017094017,
+  "longest_losing_streak": 30,
+  "worst_month": -0.18626092111729486,
+  "worst_month_label": "2023-03",
+  "exposure": 0.9417921514944102,
+  "cost_paid": 0.3399083333333333,
+  "funding_pnl": -0.10482979916666668,
+  "start": "2022-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "plateau": {
+  "ratio": 0.8644127971185612,
+  "is_spike": false,
+  "neighbor_median": 0.4901925007418093
+ },
+ "hold_full": {
+  "sharpe": 0.38394618245715767,
+  "total_return": 0.22258832490464275,
+  "cagr": 0.051489949792012935,
+  "max_drawdown": -0.6873085636700265,
+  "trades": 12,
+  "profit_factor": 8.718430304479652,
+  "win_rate": 0.8333333333333334,
+  "longest_losing_streak": 1,
+  "worst_month": -0.28032540862856614,
+  "worst_month_label": "2024-04",
+  "exposure": 0.9546733591908131,
+  "cost_paid": 0.0,
+  "funding_pnl": -0.20498397666666668,
+  "start": "2022-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "wf": {
+  "sharpe": 0.5763788647706917,
+  "total_return": 0.3885693205160896,
+  "cagr": 0.1783757127996528,
+  "max_drawdown": -0.5290512877381602,
+  "trades": 1777,
+  "profit_factor": 1.241625655679499,
+  "win_rate": 0.32301631963984245,
+  "longest_losing_streak": 30,
+  "worst_month": -0.27100992238532917,
+  "worst_month_label": "2025-01",
+  "exposure": 0.9148021308980213,
+  "cost_paid": 0.206675,
+  "funding_pnl": -0.03877554750000001,
+  "start": "2024-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "wf_cost_x2": {
+  "sharpe": 0.3750412966138239,
+  "total_return": 0.1291992249271472,
+  "cagr": 0.0626378616100347,
+  "max_drawdown": -0.5674578332163998,
+  "trades": 1777,
+  "profit_factor": 1.1485724792424121,
+  "win_rate": 0.2999437253798537,
+  "longest_losing_streak": 35,
+  "worst_month": -0.2865999247529045,
+  "worst_month_label": "2025-01",
+  "exposure": 0.9148021308980213,
+  "cost_paid": 0.41335,
+  "funding_pnl": -0.03877554750000001,
+  "start": "2024-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "wf_windows": [
+  {
+   "test_start": "2024-11-15 00:00:00+00:00",
+   "test_end": "2025-02-14 00:00:00+00:00",
+   "params": {
+    "look_h": 240,
+    "fund_cap": 0.0005
+   },
+   "train_sharpe": 0.6502466137149203
+  },
+  {
+   "test_start": "2025-02-14 00:00:00+00:00",
+   "test_end": "2025-05-16 00:00:00+00:00",
+   "params": {
+    "look_h": 240,
+    "fund_cap": 0.0005
+   },
+   "train_sharpe": 0.3874444212198912
+  },
+  {
+   "test_start": "2025-05-16 00:00:00+00:00",
+   "test_end": "2025-08-15 00:00:00+00:00",
+   "params": {
+    "look_h": 960,
+    "fund_cap": 0.0005
+   },
+   "train_sharpe": 0.7210753736626365
+  },
+  {
+   "test_start": "2025-08-15 00:00:00+00:00",
+   "test_end": "2025-11-14 00:00:00+00:00",
+   "params": {
+    "look_h": 960,
+    "fund_cap": 0.0005
+   },
+   "train_sharpe": 0.8186131386729735
+  },
+  {
+   "test_start": "2025-11-14 00:00:00+00:00",
+   "test_end": "2026-02-13 00:00:00+00:00",
+   "params": {
+    "look_h": 960,
+    "fund_cap": 0.0005
+   },
+   "train_sharpe": 0.47790663237334186
+  },
+  {
+   "test_start": "2026-02-13 00:00:00+00:00",
+   "test_end": "2026-05-15 00:00:00+00:00",
+   "params": {
+    "look_h": 960,
+    "fund_cap": 0.0005
+   },
+   "train_sharpe": 0.6119758318225569
+  },
+  {
+   "test_start": "2026-05-15 00:00:00+00:00",
+   "test_end": "2026-08-14 00:00:00+00:00",
+   "params": {
+    "look_h": 960,
+    "fund_cap": 0.0005
+   },
+   "train_sharpe": 0.24046201613597903
+  },
+  {
+   "test_start": "2026-08-14 00:00:00+00:00",
+   "test_end": "2026-11-13 00:00:00+00:00",
+   "params": {
+    "look_h": 960,
+    "fund_cap": 0.0005
+   },
+   "train_sharpe": 0.6258757658916876
+  },
+  {
+   "test_start": "2026-11-13 00:00:00+00:00",
+   "test_end": "2026-11-15 00:00:00+00:00",
+   "params": {
+    "look_h": 960,
+    "fund_cap": 0.0005
+   },
+   "train_sharpe": 0.6980029251534885
+  }
+ ],
+ "hold_wf": {
+  "sharpe": -0.22718402780710553,
+  "total_return": -0.472184787715788,
+  "cagr": -0.273491079005762,
+  "max_drawdown": -0.6873085636700278,
+  "trades": 11,
+  "profit_factor": 0.27713811129540866,
+  "win_rate": 0.2727272727272727,
+  "longest_losing_streak": 6,
+  "worst_month": -0.25499953904326544,
+  "worst_month_label": "2025-02",
+  "exposure": 0.9166666666666666,
+  "cost_paid": 0.0,
+  "funding_pnl": -0.0575823075,
+  "start": "2024-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "frozen_params": {
+  "look_h": 960,
+  "fund_cap": 0.0005
+ },
+ "frozen_full": {
+  "sharpe": 0.5670814943691486,
+  "total_return": 0.8695729983869467,
+  "cagr": 0.16920080951566385,
+  "max_drawdown": -0.46775359982668197,
+  "trades": 2925,
+  "profit_factor": 1.250882058871297,
+  "win_rate": 0.3217094017094017,
+  "longest_losing_streak": 30,
+  "worst_month": -0.18626092111729486,
+  "worst_month_label": "2023-03",
+  "exposure": 0.9417921514944102,
+  "cost_paid": 0.3399083333333333,
+  "funding_pnl": -0.10482979916666668,
+  "start": "2022-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "regime_wf": {
+  "bull": {
+   "ann_return": 0.7906470453143147,
+   "share": 0.29315068493150687
+  },
+  "bear": {
+   "ann_return": 0.5774945078005178,
+   "share": 0.29863013698630136
+  },
+  "range": {
+   "ann_return": -0.26530882566100517,
+   "share": 0.40821917808219177
+  }
+ },
+ "regime_frozen_4y": {
+  "bull": {
+   "ann_return": 0.7130315804242493,
+   "share": 0.38774811772758383
+  },
+  "bear": {
+   "ann_return": 1.0206307956052745,
+   "share": 0.21560574948665298
+  },
+  "range": {
+   "ann_return": -0.5754663968769409,
+   "share": 0.39664613278576316
+  }
+ },
+ "scores": {
+  "walk_forward": 3,
+  "max_drawdown": 1,
+  "trade_count": 5,
+  "losing_streak": 1,
+  "bear_and_range": 1
+ },
+ "score_total": 11,
+ "gates": {
+  "G1": true,
+  "G2": true,
+  "G3": true,
+  "G4": true,
+  "G5": true,
+  "G6": false
+ },
+ "status": "dead",
+ "gate": "G6",
+ "death": "熊市/震盪年化最差 -57.5%"
+}

@@ -1,0 +1,345 @@
+{
+ "name": "tsmom_ls",
+ "timeframe": "4h",
+ "family": "趨勢",
+ "regime": "走趨勢",
+ "why": "過去 10–40 天的漲跌方向延續：資訊擴散慢、追價資金分批進場",
+ "payer": "太早反手的逆勢者與被迫回補的槓桿方",
+ "overlap": "",
+ "universe": "all",
+ "grid": {
+  "look_h": [
+   240,
+   480,
+   960
+  ],
+  "band": [
+   0.0,
+   0.05,
+   0.1
+  ]
+ },
+ "fee": 0.0005,
+ "slippage": 0.0002,
+ "symbols": 12,
+ "grid_table": [
+  {
+   "look_h": 240,
+   "band": 0.0,
+   "sharpe": 0.10356734937503737,
+   "total_return": -0.2366993292371803,
+   "max_drawdown": -0.7100107746211337,
+   "trade_count": 5771
+  },
+  {
+   "look_h": 240,
+   "band": 0.05,
+   "sharpe": -0.00584932922954638,
+   "total_return": -0.31835878023844044,
+   "max_drawdown": -0.6890635963360985,
+   "trade_count": 4732
+  },
+  {
+   "look_h": 240,
+   "band": 0.1,
+   "sharpe": -0.2470605025789184,
+   "total_return": -0.4400837499922423,
+   "max_drawdown": -0.5858202643456258,
+   "trade_count": 3230
+  },
+  {
+   "look_h": 480,
+   "band": 0.0,
+   "sharpe": 0.42953398713549623,
+   "total_return": 0.4379481680905002,
+   "max_drawdown": -0.5590450782506016,
+   "trade_count": 4045
+  },
+  {
+   "look_h": 480,
+   "band": 0.05,
+   "sharpe": 0.4736482295941822,
+   "total_return": 0.5645307953723935,
+   "max_drawdown": -0.5239906292751796,
+   "trade_count": 3594
+  },
+  {
+   "look_h": 480,
+   "band": 0.1,
+   "sharpe": 0.5100692774546901,
+   "total_return": 0.6353097049602174,
+   "max_drawdown": -0.42051806298846583,
+   "trade_count": 2865
+  },
+  {
+   "look_h": 960,
+   "band": 0.0,
+   "sharpe": 0.4914783252339511,
+   "total_return": 0.620083755006186,
+   "max_drawdown": -0.4765882900176921,
+   "trade_count": 2813
+  },
+  {
+   "look_h": 960,
+   "band": 0.05,
+   "sharpe": 0.43054594921648487,
+   "total_return": 0.4430129018526747,
+   "max_drawdown": -0.4532104511078022,
+   "trade_count": 2562
+  },
+  {
+   "look_h": 960,
+   "band": 0.1,
+   "sharpe": 0.3591193243197747,
+   "total_return": 0.27678127321999146,
+   "max_drawdown": -0.4726815984033438,
+   "trade_count": 2200
+  }
+ ],
+ "breadth_positive": 0.7777777777777778,
+ "full_best": {
+  "params": {
+   "look_h": 480,
+   "band": 0.1
+  },
+  "sharpe": 0.5100692774546901,
+  "total_return": 0.6353097049602174,
+  "cagr": 0.13074181625536951,
+  "max_drawdown": -0.42051806298846583,
+  "trades": 2865,
+  "profit_factor": 1.2186524321200187,
+  "win_rate": 0.32006980802792323,
+  "longest_losing_streak": 21,
+  "worst_month": -0.16366315291118005,
+  "worst_month_label": "2024-08",
+  "exposure": 0.4633147007376987,
+  "cost_paid": 0.33314166666666667,
+  "funding_pnl": -0.112724985,
+  "start": "2022-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "plateau": {
+  "ratio": 0.7040598996901467,
+  "is_spike": false,
+  "neighbor_median": 0.3591193243197747
+ },
+ "hold_full": {
+  "sharpe": 0.38394618245715767,
+  "total_return": 0.22258832490464275,
+  "cagr": 0.051489949792012935,
+  "max_drawdown": -0.6873085636700265,
+  "trades": 12,
+  "profit_factor": 8.718430304479652,
+  "win_rate": 0.8333333333333334,
+  "longest_losing_streak": 1,
+  "worst_month": -0.28032540862856614,
+  "worst_month_label": "2024-04",
+  "exposure": 0.9546733591908131,
+  "cost_paid": 0.0,
+  "funding_pnl": -0.20498397666666668,
+  "start": "2022-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "wf": {
+  "sharpe": 0.5959057854407489,
+  "total_return": 0.4134253481626442,
+  "cagr": 0.1888756655608037,
+  "max_drawdown": -0.5120004079791971,
+  "trades": 1663,
+  "profit_factor": 1.261456893928098,
+  "win_rate": 0.32892363199037883,
+  "longest_losing_streak": 31,
+  "worst_month": -0.27100992238532917,
+  "worst_month_label": "2025-01",
+  "exposure": 0.8693493150684932,
+  "cost_paid": 0.193375,
+  "funding_pnl": -0.039509423333333335,
+  "start": "2024-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "wf_cost_x2": {
+  "sharpe": 0.4025385858583403,
+  "total_return": 0.16479545991119604,
+  "cagr": 0.07925690172043653,
+  "max_drawdown": -0.5463783741231338,
+  "trades": 1663,
+  "profit_factor": 1.1669298541136,
+  "win_rate": 0.3036680697534576,
+  "longest_losing_streak": 35,
+  "worst_month": -0.2865999247529045,
+  "worst_month_label": "2025-01",
+  "exposure": 0.8693493150684932,
+  "cost_paid": 0.38675,
+  "funding_pnl": -0.039509423333333335,
+  "start": "2024-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "wf_windows": [
+  {
+   "test_start": "2024-11-15 00:00:00+00:00",
+   "test_end": "2025-02-14 00:00:00+00:00",
+   "params": {
+    "look_h": 240,
+    "band": 0.0
+   },
+   "train_sharpe": 0.5452330803257204
+  },
+  {
+   "test_start": "2025-02-14 00:00:00+00:00",
+   "test_end": "2025-05-16 00:00:00+00:00",
+   "params": {
+    "look_h": 480,
+    "band": 0.1
+   },
+   "train_sharpe": 0.4094460350857888
+  },
+  {
+   "test_start": "2025-05-16 00:00:00+00:00",
+   "test_end": "2025-08-15 00:00:00+00:00",
+   "params": {
+    "look_h": 960,
+    "band": 0.0
+   },
+   "train_sharpe": 0.6292650738584147
+  },
+  {
+   "test_start": "2025-08-15 00:00:00+00:00",
+   "test_end": "2025-11-14 00:00:00+00:00",
+   "params": {
+    "look_h": 960,
+    "band": 0.0
+   },
+   "train_sharpe": 0.7282099491038271
+  },
+  {
+   "test_start": "2025-11-14 00:00:00+00:00",
+   "test_end": "2026-02-13 00:00:00+00:00",
+   "params": {
+    "look_h": 960,
+    "band": 0.0
+   },
+   "train_sharpe": 0.3965213763804511
+  },
+  {
+   "test_start": "2026-02-13 00:00:00+00:00",
+   "test_end": "2026-05-15 00:00:00+00:00",
+   "params": {
+    "look_h": 960,
+    "band": 0.0
+   },
+   "train_sharpe": 0.5850233748072379
+  },
+  {
+   "test_start": "2026-05-15 00:00:00+00:00",
+   "test_end": "2026-08-14 00:00:00+00:00",
+   "params": {
+    "look_h": 960,
+    "band": 0.0
+   },
+   "train_sharpe": 0.21617297208419278
+  },
+  {
+   "test_start": "2026-08-14 00:00:00+00:00",
+   "test_end": "2026-11-13 00:00:00+00:00",
+   "params": {
+    "look_h": 960,
+    "band": 0.0
+   },
+   "train_sharpe": 0.6027995097729479
+  },
+  {
+   "test_start": "2026-11-13 00:00:00+00:00",
+   "test_end": "2026-11-15 00:00:00+00:00",
+   "params": {
+    "look_h": 960,
+    "band": 0.0
+   },
+   "train_sharpe": 0.6752771714754715
+  }
+ ],
+ "hold_wf": {
+  "sharpe": -0.22718402780710553,
+  "total_return": -0.472184787715788,
+  "cagr": -0.273491079005762,
+  "max_drawdown": -0.6873085636700278,
+  "trades": 11,
+  "profit_factor": 0.27713811129540866,
+  "win_rate": 0.2727272727272727,
+  "longest_losing_streak": 6,
+  "worst_month": -0.25499953904326544,
+  "worst_month_label": "2025-02",
+  "exposure": 0.9166666666666666,
+  "cost_paid": 0.0,
+  "funding_pnl": -0.0575823075,
+  "start": "2024-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "frozen_params": {
+  "look_h": 960,
+  "band": 0.0
+ },
+ "frozen_full": {
+  "sharpe": 0.4914783252339511,
+  "total_return": 0.620083755006186,
+  "cagr": 0.12810237011934533,
+  "max_drawdown": -0.4765882900176921,
+  "trades": 2813,
+  "profit_factor": 1.2419535846784358,
+  "win_rate": 0.3121222893707785,
+  "longest_losing_streak": 30,
+  "worst_month": -0.18626092111729486,
+  "worst_month_label": "2023-03",
+  "exposure": 0.9544356985322078,
+  "cost_paid": 0.3267833333333333,
+  "funding_pnl": -0.13942503583333335,
+  "start": "2022-11-15 00:00:00+00:00",
+  "end": "2026-11-14 20:00:00+00:00"
+ },
+ "regime_wf": {
+  "bull": {
+   "ann_return": 0.9078001440578548,
+   "share": 0.29315068493150687
+  },
+  "bear": {
+   "ann_return": 0.6186264065739556,
+   "share": 0.29863013698630136
+  },
+  "range": {
+   "ann_return": -0.3742357814189949,
+   "share": 0.40821917808219177
+  }
+ },
+ "regime_frozen_4y": {
+  "bull": {
+   "ann_return": 0.6780626702729936,
+   "share": 0.38774811772758383
+  },
+  "bear": {
+   "ann_return": 0.9720423663948962,
+   "share": 0.21560574948665298
+  },
+  "range": {
+   "ann_return": -0.5876273635815589,
+   "share": 0.39664613278576316
+  }
+ },
+ "scores": {
+  "walk_forward": 3,
+  "max_drawdown": 1,
+  "trade_count": 5,
+  "losing_streak": 1,
+  "bear_and_range": 1
+ },
+ "score_total": 11,
+ "gates": {
+  "G1": true,
+  "G2": true,
+  "G3": true,
+  "G4": true,
+  "G5": true,
+  "G6": false
+ },
+ "status": "dead",
+ "gate": "G6",
+ "death": "熊市/震盪年化最差 -58.8%"
+}

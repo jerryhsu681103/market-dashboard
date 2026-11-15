@@ -1,0 +1,102 @@
+{
+ "name": "donchian_atr@4h",
+ "frozen_params": {
+  "entry_h": 960,
+  "stop_k": 4.0
+ },
+ "window": [
+  "2022-11-15 00:00:00+00:00",
+  "2026-11-14 20:00:00+00:00"
+ ],
+ "yearly_return": {
+  "2022": 0.0246,
+  "2023": 0.1222,
+  "2024": -0.0089,
+  "2025": 0.0348,
+  "2026": 0.3192
+ },
+ "by_symbol": {
+  "ADAUSDT": {
+   "pnl_contrib": 0.0132,
+   "trades": 42
+  },
+  "AVAXUSDT": {
+   "pnl_contrib": 0.1294,
+   "trades": 42
+  },
+  "BNBUSDT": {
+   "pnl_contrib": 0.0397,
+   "trades": 39
+  },
+  "BTCUSDT": {
+   "pnl_contrib": 0.0489,
+   "trades": 45
+  },
+  "DOGEUSDT": {
+   "pnl_contrib": 0.0704,
+   "trades": 37
+  },
+  "DOTUSDT": {
+   "pnl_contrib": -0.0406,
+   "trades": 48
+  },
+  "ETHUSDT": {
+   "pnl_contrib": 0.0476,
+   "trades": 43
+  },
+  "LINKUSDT": {
+   "pnl_contrib": 0.0228,
+   "trades": 41
+  },
+  "LTCUSDT": {
+   "pnl_contrib": -0.0206,
+   "trades": 40
+  },
+  "MATICUSDT": {
+   "pnl_contrib": -0.0018,
+   "trades": 20
+  },
+  "SOLUSDT": {
+   "pnl_contrib": 0.1628,
+   "trades": 43
+  },
+  "XRPUSDT": {
+   "pnl_contrib": 0.1352,
+   "trades": 33
+  }
+ },
+ "by_side": {
+  "short": {
+   "pnl_contrib": 0.153,
+   "trades": 202
+  },
+  "long": {
+   "pnl_contrib": 0.4539,
+   "trades": 271
+  }
+ },
+ "top_symbol": "SOLUSDT",
+ "without_top_symbol": {
+  "sharpe": 0.4296,
+  "total_return": 0.364,
+  "max_drawdown": -0.3196
+ },
+ "frozen_cost_x2_4y": {
+  "sharpe": 0.4814,
+  "total_return": 0.4737,
+  "max_drawdown": -0.3341
+ },
+ "frozen_4y": {
+  "sharpe": 0.5285,
+  "total_return": 0.5557,
+  "max_drawdown": -0.3281,
+  "trades": 473,
+  "win_rate": 0.4419,
+  "profit_factor": 1.3609,
+  "longest_losing_streak": 16,
+  "worst_month": -0.0883,
+  "exposure": 0.3061
+ },
+ "median_trade_pnl_on_slice": -0.024112634094219917,
+ "avg_holding_bars": 68.0676532769556
+}

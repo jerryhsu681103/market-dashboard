@@ -1,0 +1,92 @@
+{
+ "written_at_utc": "2026-11-15T16:24:09.529089+00:00",
+ "source": "data.binance.vision USDT 永續 1h 日檔（合成 4h）",
+ "last_closed_bar_open_utc": "2026-11-14T20:00:00+00:00",
+ "paper_start_utc": "2026-11-15T00:00:00Z",
+ "halted": false,
+ "halt_reason": "",
+ "anomalies": [],
+ "books": {
+  "donchian_atr": {
+   "realized_plus_open_pnl_usdt": 0.0,
+   "bars_recorded": 0
+  },
+  "near_high_momo": {
+   "realized_plus_open_pnl_usdt": 0.0,
+   "bars_recorded": 0
+  }
+ },
+ "journal_events": 0,
+ "new_events_this_run": 0,
+ "open_positions": [],
+ "pending_next_bar": [],
+ "not_recorded_carried_signals": [
+  {
+   "strategy": "donchian_atr",
+   "symbol": "BTCUSDT",
+   "side": -1,
+   "note": "起記前已成立的持倉訊號，不追記；等它出場後的下一次新訊號才記"
+  },
+  {
+   "strategy": "donchian_atr",
+   "symbol": "ETHUSDT",
+   "side": -1,
+   "note": "起記前已成立的持倉訊號，不追記；等它出場後的下一次新訊號才記"
+  },
+  {
+   "strategy": "donchian_atr",
+   "symbol": "BNBUSDT",
+   "side": -1,
+   "note": "起記前已成立的持倉訊號，不追記；等它出場後的下一次新訊號才記"
+  },
+  {
+   "strategy": "donchian_atr",
+   "symbol": "XRPUSDT",
+   "side": -1,
+   "note": "起記前已成立的持倉訊號，不追記；等它出場後的下一次新訊號才記"
+  },
+  {
+   "strategy": "donchian_atr",
+   "symbol": "DOGEUSDT",
+   "side": -1,
+   "note": "起記前已成立的持倉訊號，不追記；等它出場後的下一次新訊號才記"
+  },
+  {
+   "strategy": "donchian_atr",
+   "symbol": "ADAUSDT",
+   "side": -1,
+   "note": "起記前已成立的持倉訊號，不追記；等它出場後的下一次新訊號才記"
+  },
+  {
+   "strategy": "donchian_atr",
+   "symbol": "DOTUSDT",
+   "side": -1,
+   "note": "起記前已成立的持倉訊號，不追記；等它出場後的下一次新訊號才記"
+  },
+  {
+   "strategy": "donchian_atr",
+   "symbol": "LTCUSDT",
+   "side": -1,
+   "note": "起記前已成立的持倉訊號，不追記；等它出場後的下一次新訊號才記"
+  },
+  {
+   "strategy": "donchian_atr",
+   "symbol": "SOLUSDT",
+   "side": -1,
+   "note": "起記前已成立的持倉訊號，不追記；等它出場後的下一次新訊號才記"
+  },
+  {
+   "strategy": "donchian_atr",
+   "symbol": "AVAXUSDT",
+   "side": -1,
+   "note": "起記前已成立的持倉訊號，不追記；等它出場後的下一次新訊號才記"
+  },
+  {
+   "strategy": "donchian_atr",
+   "symbol": "LINKUSDT",
+   "side": -1,
+   "note": "起記前已成立的持倉訊號，不追記；等它出場後的下一次新訊號才記"
+  }
+ ],
+ "pending_note": "待成交＝訊號已成立、下一根開盤價尚未公布；價格公布後才記為成交，不預填價格。"
+}
